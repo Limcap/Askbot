@@ -1,0 +1,64 @@
+SISTEMA ESPECIALISTA BASICO
+
+Descricao dos tipos de objetos:
+
+-Sistema:
+ Objeto que define o título e descricao do Sistema
+
+-Questao:
+ Objeto que define um enunciado e um conjunto de respostas possíveis
+ a serem apresentados para o usuário.
+ 1o membro é o string do enunciado.
+ 2o membro é o conjunto de respostas.
+ Resulta em um String qu é o input do usuário.
+
+
+-Teste:
+ Objeto que permite o uso de fluxo condicional para fazer comparacoes com os
+ resultados das Questoes e resulta em um String
+
+========== SIMBOLOS ============
+
+Tipos:		Sistema  Questao  Teste
+Fluxo:		Se  Entao  OuSe  Senao  :  ,  (  )
+Operadores:	//  +  -  /  *  ^
+Variáveis:	q*  t*
+String:		"*"
+Array:		[]
+
+========== PROTÓTIPO ============
+
+Especialidade:
+	"Cores"
+	"Descricao"
+
+
+Questao qCor:
+	"Olá, escolha uma cor"
+	[ "Azul", "Vermelho", "Verde", "Preto" ]
+
+
+Questao qTon:
+	"Escolha uma tonalidade da cor"
+	[ 1-10 ]
+
+
+Questao qTemp:
+	"Qual a temperatura do ambiente?"
+	[ 0.0-50.0 ]
+
+
+Teste c1:
+	"Comparar cores favoritas"
+	Se		qCor == "Verde" && qTon < 4
+	Entao	"Eu prefiro verde claro"
+	OuSe	qCor == "Verde" && qTon < 8
+	Entao "Eu também gosto de verde claro"
+	Senao	"Você gosta de vemelho"
+
+
+Teste c3:
+	"Verificar temperatura"
+	Se qTemp > 27
+	Entao "Está bem quente hoje"'
+	Senao ""

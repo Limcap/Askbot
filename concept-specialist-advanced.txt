@@ -1,0 +1,111 @@
+SISTEMA ESPECIALISTA AVANÇADO
+
+Novos tipos de objetos disponíveis: Bool, Relatorio, Sequencia.
+
+-Bool:
+ Objeto que contem somente um fluxo condicional que retorna
+ verdadeiro ou falso.
+
+-Relatorio:
+ Objeto que retorna uma String representando o resultado de um
+ conjnto de Testes. Possui um nome, indicado por um string na
+ primeira linha da estrutura do objeto e depois uma expressao
+ que retorne um string. A expressão pode conter  variaveis do
+ tipo Bool, Teste. Também pode contem Strings e uma condicional.
+
+-Sequencia:
+ Objeto que indica uma sequencia de Questoes, Testes e Relatorios
+ a serem apresentados ao usuário.
+
+Novo parametro em Especialidade, que indica qual o objeto que
+deve ser usado para controlar a exibição do conteudo:
+
+-escolher Teste:
+ Apresenta ao usuário o nome de todos os Testes para ele escolher
+ quais quer executar. O sistema verifica quais as questoes necessárias
+ para os testes escolhidos para serem apresetadas ao usuário
+
+-escolher Relatorio:
+ Apresenta ao usuário o nome de todos os Relatorios para que ele
+ escolha qual quer executar. Os Testes a serem executados são
+ derivados a partir do Relatorio escolhido, e as questoes são
+ derivadas destes Testes.
+
+-tNome, rNome ou sNome
+ Pode-se definir o nome de uma variável de Teste, Relatorio ou
+ Sequencia neste parâmetro, dessa forma não será apresentado ao
+ usuário uma escolha como nas opções anteriores. 
+
+========== SIMBOLOS ============
+
+-Tipos:		Sistema  Questao  Teste  Bool  Relatorio  Sequencia
+-Fluxo:		Se  Entao  OuSe  Senao  :  ,  (  )
+-Operadoes:	->  //  contem  escolher  +  -  /  *  ^
+-Variaveis:	b*  q*  t*  s*  r*
+-String: 	"*"
+-Array:		[]
+
+
+========== PROTOTIPO ============
+
+Especialidade:
+	"Cores"
+	"Descricao"
+	escolher Teste, escolher Relatorio, tNome, rNome, sNome
+
+
+// Para sistema especialista, as classes sao mais simples
+
+
+Questao qCor:
+	"Olá, escolha uma cor"
+	[ "Azul", "Vermelho", "Verde", "Preto" ]
+
+
+Questao qTon:
+	"Escolha uma tonalidade da cor %pCor%"
+	[ 1-10 ]
+
+
+Questao qTemp:
+	"Qual a temperatura do ambiente?"
+	[ 0.0 - 50.0 ]
+
+
+Teste c1:
+	"Comparar cores favoritas"
+	Se	qCor == "Verde" && qTon < 4
+	Entao "Eu prefiro verde claro"
+	OuSe	qCor == "Verde" && qTon < 8
+	Entao "Eu também gosto de verde claro"
+	Senao	"Você gosta de vemelho"
+
+
+Teste c3:
+	"Verificar temperatura"
+	Se qTemp > 27
+	Entao "Está bem quente hoje"'
+	Senao ""
+
+
+Relatorio r1:
+	"Cores e Temperatura"
+	Se qTon < 4
+	Entao "Vamos ver os resultados"
+	Senao "Ok, aqui estão os resltados"
+	t1; t2; t3; t4;
+
+
+Sequencia s1:
+	dNome	-> qCor
+	qCor	-> Se qCor == "Verde"
+				Entao qTonalidade
+				Senao d5
+	qTon	-> d5
+	d5		-> tFim
+	tFim 	-> r1
+
+
+Bool b1:
+	qCor == "Verde"
+	&& qTon > 7
