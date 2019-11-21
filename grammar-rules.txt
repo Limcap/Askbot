@@ -1,0 +1,58 @@
+
+
+	/** INICIO -> ESPECIALIDADE  LISTA_DE_QUESTOES  LISTA_DE_TESTES
+	 */
+	
+	/** ESPECIALIDADE -> Especialidade  :  String String
+	 */
+	
+	/** LISTA_DE_QUESTOES -> QUESTAO  LISTA_DE_QUESTOES | vazio
+	 */
+	
+	/** QUESTAO -> Questao  qVar  :  String  ARRAY
+	 */
+	
+	/** ARRAY -> [  RANGE  ]  |  [  ITEMS  ]
+	 */
+	
+	/** RANGE -> NUMERO - NUMERO
+	 */
+	
+	/** NUMERO -> Inteiro | Decimal
+	 */
+	
+	/** ITEMS -> ITEM  OBJETO_ADICIONAL
+	 */
+	
+	/** ITEM -> NUMERO | STRING
+	 */
+	
+	/** ITEM_ADICIONAL -> , OBJETO | vazio
+	 */
+	
+	/** LISTA_DE_TESTES -> TESTE  LISTA_DE_TESTES | vazio
+	 */
+	
+	/** TESTE -> Teste  tVar  :  String  CONDICAO
+	 */
+	
+	/** CONDICAO -> Se  COMPARACAO_COMPOSTA  Entao  String  Senao  String
+	 */
+	
+	/** COMPARACAO_COMPOSTA -> COMPARACAO  COMPARACAO_ADICIONAL
+	 */
+	
+	/** COMPARACAO -> TERMO  OP_COMPARACAO  TERMO
+	 */
+	
+	/** COMPARACAO_ADICIONAL -> OP_LOGICO  COMPARACAO | vazio
+	 */
+	
+	/** TERMO -> gVar | tVar | String | Inteiro | Decimal
+	 */
+	
+	/** OP_COMPARACAO -> ==  |  >  |  >=  |  <  |  <=  |  != 
+	 */
+	
+	/** OP_LOGICO -> && | || 
+	 */
