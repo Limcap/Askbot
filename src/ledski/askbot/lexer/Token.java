@@ -24,11 +24,11 @@ public class Token {
 	
 	public Gridder toGridder() {
 		Gridder gr = new Gridder();
-		return gr.text( "{ TOKEN:", type.name(), "- LEXEMA:", Utils.legivel( lexema ), "}" );
+		return gr.text( "TOKEN:", type.name(), "- LEXEMA:", Utils.legivel( lexema ) );
 	}
 	
 	public String toString() {
-		return String.join( " ", "{ TOKEN:", type.name(), "\t LEXEMA:", Utils.legivel( lexema ), "}" );
+		return String.join( " ", "TOKEN:", type.name(), "- LEXEMA:", Utils.legivel( lexema ) );
 	}
 	
 	
