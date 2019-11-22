@@ -61,12 +61,13 @@ public class Automato {
 		for( int i=0; i <= charArray.length; i++ ) {// char c : s.toCharArray() ) {
 			char c = i == s.length() ? '\r' : charArray[i];
 			t = getNextToken( c );
-			// se o token retornado for de um estado final, entao adiciona o token na lista de resultados, reseta o
+			// Se o token retornado for de um estado final, entao adiciona o token na lista de resultados, reseta o
 			// automato E REPROCESSA o mesmo caractere, a partir do estado inicial. Isso é necessário porque esse
 			// último char já é o primeiro do próximo token.
 			while( t.type != TokenType._none && t.type != TokenType._error ) {
-				// caso retorne um token, reseta o automato e processa o mesmo charactere novamente
-				resultTokens.add( t );
+				// Caso retorne um token vádido, adiciona o token na lista, reseta o automato
+				// e processa o mesmo charactere novamente. Não diciona tokens _whitespace.
+				if( t.type != TokenType._whitespace ) resultTokens.add( t );
 				restart();
 				t = getNextToken( c );
 			}
@@ -81,27 +82,58 @@ public class Automato {
 	
 	
 	/**
-	 * Avança o autômato em 1 estado utilizando o char passado como link transição.
-	 * @param c char para link de transição
+	 * Avança o autômato em 1 estado utilizando o char passado como link transição e retorna o token
+	 * do novo estado.
+	 * @param c char do link de transição
 	 * @return Token
 	 */
 	private Token getNextToken( char c ) {
 		if( currentNode == null ) return new Token(TokenType._error, null);
 		Node nextNode = currentNode.getLinkedNode( c );
-		String nextNodeName = nextNode == null ? "X" : "(" + nextNode.nome + ")";  
-		gr2.text( "("+currentNode.nome+")" ).text( "["+Utils.legivel(c)+"]" ).text( nextNodeName );
-		verbose( 2, gr2 );
-//		verbose( 2, "(" + currentNode.nome + ")\t[" + legivel( c ) + "]\t" + nextNodeName );
-		if( nextNode != null && nextNode.marcado ) {
-			gr1.text( "TOKEN: " + nextNode.tokenType.name() )
-			   .textLine( "LEXEMA: " + Utils.legivel( lexema.toString() ) );
-			verbose( 1, gr1 );
-//			verbose( 1, "TOKEN: " + nextNode.token.name() + "\nLEXEMA: " + legivel( lexema.toString() ) );
-		} else {
-			currentNode = nextNode;
+
+		verboseNextNode( c, nextNode );
+
+		// Cria o token apropriado
+		Token token;
+		if( nextNode == null ) {
+			lexema.append( c );
+			token = new Token( TokenType._error, lexema.toString() );
 		}
-		lexema.append( c );
-		return new Token( nextNode != null ? nextNode.tokenType : TokenType._error, lexema.toString() );
+		else if( nextNode.marcado ) {
+			// Caso o estado seja marcado, o char de transição nao é incluido no lexema do token,
+			// pois ele é o caractere que marca o divisor entre esse token e o próximo. Ele é
+			// inserido após a criação do token pois deve ser inserido de qualquer forma para o
+			// reconhecimento correto do próximo token.
+			token = new Token( nextNode.tokenType, lexema.toString() );
+			lexema.append( c );
+		}
+		else {
+			lexema.append( c );
+			token = new Token( TokenType._none, lexema.toString() );
+		}
+		currentNode = nextNode;
+		return token;
+	}
+	
+	
+	
+	/**
+	 * Verbosidade da transição efetuada e token encontrado
+	 * @param nextNode
+	 */
+	private void  verboseNextNode( char c, Node nextNode ) {
+		if( verboseLevel012 > 0 ) {
+			String nextNodeName = nextNode == null ? "X" : "(" + nextNode.nome + ")";  
+			gr2.text( "("+currentNode.nome+")" ).text( "["+Utils.legivel(c)+"]" ).text( nextNodeName );
+			verbose( 2, gr2 );
+//			verbose( 2, "(" + currentNode.nome + ")\t[" + legivel( c ) + "]\t" + nextNodeName );
+			if( nextNode != null && nextNode.marcado ) {
+				gr1.text( "TOKEN: " + nextNode.tokenType.name() )
+				.textLine( "LEXEMA: " + Utils.legivel( lexema.toString() ) );
+				verbose( 1, gr1 );
+//				verbose( 1, "TOKEN: " + nextNode.token.name() + "\nLEXEMA: " + legivel( lexema.toString() ) );
+			}
+		}
 	}
 	
 	
