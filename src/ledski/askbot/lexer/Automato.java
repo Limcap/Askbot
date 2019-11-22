@@ -1,9 +1,9 @@
-package ledski.askbot.automato;
+package ledski.askbot.lexer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ledski.askbot.automato.Token.TokenType;
+import ledski.askbot.lexer.Token.TokenType;
 import ledski.util.Gridder;
 
 /**

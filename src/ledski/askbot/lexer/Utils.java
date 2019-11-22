@@ -1,4 +1,4 @@
-package ledski.askbot.automato;
+package ledski.askbot.lexer;
 
 /**
  * 

@@ -1,4 +1,6 @@
-package ledski.askbot.automato;
+package ledski.askbot.lexer;
+import static ledski.askbot.lexer.Token.TokenType.*;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -7,8 +9,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import ledski.askbot.automato.Token.TokenType;
-import static ledski.askbot.automato.Token.TokenType.*;
+import ledski.askbot.lexer.Token.TokenType;
 
 /**
  * @author Leandro Oliveira Lino de Araujo
