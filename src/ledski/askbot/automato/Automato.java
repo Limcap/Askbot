@@ -60,7 +60,7 @@ public class Automato {
 		char[] charArray = s.toCharArray();
 		for( int i=0; i <= charArray.length; i++ ) {// char c : s.toCharArray() ) {
 			char c = i == s.length() ? '\r' : charArray[i];
-			t = process( c );
+			t = getNextToken( c );
 			// se o token retornado for de um estado final, entao adiciona o token na lista de resultados, reseta o
 			// automato E REPROCESSA o mesmo caractere, a partir do estado inicial. Isso é necessário porque esse
 			// último char já é o primeiro do próximo token.
@@ -68,10 +68,11 @@ public class Automato {
 				// caso retorne um token, reseta o automato e processa o mesmo charactere novamente
 				resultTokens.add( t );
 				restart();
-				t = process( c );
+				t = getNextToken( c );
 			}
 			if( t.type == TokenType._error ) {
 				resultTokens.add( t );
+				break;
 			}
 		}
 		return resultTokens;
@@ -84,7 +85,7 @@ public class Automato {
 	 * @param c char para link de transição
 	 * @return Token
 	 */
-	private Token process( char c ) {
+	private Token getNextToken( char c ) {
 		if( currentNode == null ) return new Token(TokenType._error, null);
 		Node nextNode = currentNode.getLinkedNode( c );
 		String nextNodeName = nextNode == null ? "X" : "(" + nextNode.nome + ")";  
