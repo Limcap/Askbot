@@ -42,8 +42,7 @@ public class TokenizedCodeManager {
 	
 	public Token getNextToken( TokenType type ) throws UnexpectedToken, NonExistentToken, UnexpectedEndOfCode {
 		if( pointer > tokenList.size()-1 ) {
-			String msg = "\nINDEX: " + pointer;
-			throw new CompilerExceptions.UnexpectedEndOfCode( msg );
+			throw new CompilerExceptions.UnexpectedEndOfCode("");
 		}
 		Token t = tokenList.get( pointer++ );
 		if( t.type == TokenType._error ) {

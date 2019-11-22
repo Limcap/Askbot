@@ -21,8 +21,8 @@ public class ListaDeQuestoes extends GrammarRule {
 		super( code );
 		listaDeQuestoes = new ArrayList<Questao>();
 	
-		// Como a regra pode ser vazia, exceções são ignoradas e o ponteiro de tokens do tekenizedCodeManager
-		// é reposicionado para o índice onde estava no início da regra.
+		// Como a regra pode ser vazia, exceções de token são ignoradas e o ponteiro de tokens do
+		// tekenizedCodeManager é reposicionado para o índice onde estava no início da regra.
 		try {
 			listaDeQuestoes.add( new Questao( code ) );
 			listaDeQuestoes.addAll( new ListaDeQuestoes( code ).listaDeQuestoes );

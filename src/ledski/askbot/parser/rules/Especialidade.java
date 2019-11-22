@@ -17,7 +17,7 @@ public class Especialidade extends GrammarRule {
 	public String name;
 	public String description;
 	public List<Questao> listaDeQuestoes;
-	public List<ListaDeTestes> listaDeTestes;
+	public List<Teste> listaDeTestes;
 	
 	public Especialidade( TokenizedCodeManager code ) throws NonExistentToken, UnexpectedToken, UnexpectedEndOfCode {
 		super( code );
@@ -29,6 +29,8 @@ public class Especialidade extends GrammarRule {
 		description = code.getNextToken( _String ).lexema;
 
 		listaDeQuestoes = new ListaDeQuestoes( code ).listaDeQuestoes;
+		
+		listaDeTestes = new ListaDeTestes( code ).listaDeTestes;
 	}
 
 }
