@@ -34,14 +34,14 @@ public class Token {
 	
 	
 	public enum TokenType {
-	Sistema, Questao, Teste, String, Inteiro, Decimal,
-	Se, Entao, OuSe, Senao,
-	qVar, tVar,
-	whitespace,
-	igual,
-	mais, menos, vezes, barra, potencia, mod, e, ou,
-	maior, maiorIgual, menor, menorIgual, igualIgual,
-	parenteses1, parenteses2, chave1, chave2, doisPontos,
+	_Especialidade, _Questao, _Teste, _String, _Inteiro, _Decimal,
+	_Se, _Entao, _OuSe, _Senao,
+	_qVar, _tVar,
+	_whitespace,
+	_igual,
+	_mais, _menos, _vezes, _barra, _potencia, _mod, _e, _ou,
+	_maior, _maiorIgual, _menor, _menorIgual, _igualIgual,
+	_parenteses1, _parenteses2, _chave1, _chave2, _doisPontos,
 	_error, _none, 
 	}
 }

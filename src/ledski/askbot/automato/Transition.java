@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import ledski.askbot.automato.Token.TokenType;
+import static ledski.askbot.automato.Token.TokenType.*;
 
 /**
  * @author Leandro Oliveira Lino de Araujo
@@ -19,49 +20,48 @@ public abstract class Transition {
 	
 	// Dicionario
 	public static final Map<String, String> dict = Stream.of(new Object[][] { 
-		//Verbete		String de transi�ao
-		{"whs",					" \t\n\r"},
-		{"num",					"0123456789"},
-		{"fs1",					"=-+"},
-		{"alphanum",			"aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVxXwWyYzZ_0987654321"},
+		{"whs",          " \t\n\r"},
+		{"num",          "0123456789"},
+		{"fs1",          "=-+"},
+		{"alphanum",     "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVxXwWyYzZ_0987654321"},
 	}).collect(Collectors.toMap(data -> (String) data[0], data -> (String) data[1]));
 	
 	
 	
-	// Transicoes - Simbolos reservados
+	// Transicoes do estado incial até o estado marcado e o token relacionado
 	public static final Map<TokenType, String> pathMap = Stream.of(new Object[][] { 
-		{TokenType.Sistema,		"S i s t e m a [whs]"},
-		{TokenType.Questao,		"Q u e s t a o [whs]"},
-		{TokenType.Teste,			"T e s t e [whs]"},
-		{TokenType.String,			"\" []* \" []"},
-		{TokenType.Inteiro,		"[num] [num]* []"},
-		{TokenType.Decimal,		"[num] [num]* . [num] [num]* []"},
-		{TokenType.Se,				"S e [whs]"},
-		{TokenType.Entao,			"E n t a o [whs]"},
-		{TokenType.OuSe,			"O u S e [whs]"},
-		{TokenType.Senao,			"S e n a o [whs]"},
-		{TokenType.whitespace,		"[whs] [whs]* []"},
-		{TokenType.parenteses1,	"( []"},
-		{TokenType.parenteses2,	") []"},
-		{TokenType.chave1,			"{ []"},
-		{TokenType.chave2,			"} []"},
-		{TokenType.igual,			"= []"},
-		{TokenType.igualIgual,		"= = []"},
-		{TokenType.maior,			"> []"},
-		{TokenType.maiorIgual,		"> = []"},
-		{TokenType.menor,			"< []"},
-		{TokenType.menorIgual,		"< = []"},
-		{TokenType.mais,			"+ []"},
-		{TokenType.menos,			"- []"},
-		{TokenType.vezes,			"* []"},
-		{TokenType.potencia,		"^ []"},
-		{TokenType.barra,			"/ []"},
-		{TokenType.mod,			"% []"},
-		{TokenType.e,				"& []"},
-		{TokenType.ou,				"| []"},
-		{TokenType.doisPontos,		": []"},
-		{TokenType.qVar,			"q [alphanum]* []"},
-		{TokenType.tVar,			"t [alphanum]* []"},
+		{_Especialidade, "S i s t e m a [whs]"},
+		{_Questao,       "Q u e s t a o [whs]"},
+		{_Teste,         "T e s t e [whs]"},
+		{_String,        "\" []* \" []"},
+		{_Inteiro,       "[num] [num]* []"},
+		{_Decimal,       "[num] [num]* . [num] [num]* []"},
+		{_Se,            "S e [whs]"},
+		{_Entao,         "E n t a o [whs]"},
+		{_OuSe,          "O u S e [whs]"},
+		{_Senao,         "S e n a o [whs]"},
+		{_whitespace,    "[whs] [whs]* []"},
+		{_parenteses1,   "( []"},
+		{_parenteses2,   ") []"},
+		{_chave1,        "{ []"},
+		{_chave2,        "} []"},
+		{_igual,         "= []"},
+		{_igualIgual,    "= = []"},
+		{_maior,         "> []"},
+		{_maiorIgual,    "> = []"},
+		{_menor,         "< []"},
+		{_menorIgual,    "< = []"},
+		{_mais,          "+ []"},
+		{_menos,         "- []"},
+		{_vezes,         "* []"},
+		{_potencia,      "^ []"},
+		{_barra,         "/ []"},
+		{_mod,           "% []"},
+		{_e,             "& []"},
+		{_ou,            "| []"},
+		{_doisPontos,    ": []"},
+		{_qVar,          "q [alphanum]* []"},
+		{_tVar,          "t [alphanum]* []"},
 	}).collect(Collectors.toMap(data -> (TokenType) data[0], data -> (String) data[1]));
 	
 	
@@ -72,7 +72,7 @@ public abstract class Transition {
 	static public int nextNodeDepth = 0;
 	static private boolean wordIsEntry = false;
 	
-	static public TokenType tokenType = TokenType._none;
+	static public TokenType tokenType = _none;
 	static public boolean hasBrackets = false;
 	static public String transitionStr;// para verbosidade
 	static public String word = null;

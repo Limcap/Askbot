@@ -189,7 +189,7 @@ public class Automato {
 		if( this.verboseLevel012 <= 1 &&
 			!this.verboseWhitespaceTokens &&
 			this.currentNode != null &&
-			this.currentNode.tokenType == TokenType.whitespace
+			this.currentNode.tokenType == TokenType._whitespace
 			) return;
 		if( this.verboseLevel012 >= level ) System.out.println( gr.publish() );
 	}
