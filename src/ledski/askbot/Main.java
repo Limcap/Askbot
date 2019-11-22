@@ -2,33 +2,38 @@ package ledski.askbot;
 
 import java.util.List;
 
-import ledski.askbot.automato.Automato;
-import ledski.askbot.automato.ConflictingTransitionException;
-import ledski.askbot.automato.Token;
+import ledski.askbot.parser.CompilerExceptions.NonExistentToken;
+import ledski.askbot.parser.CompilerExceptions.UnexpectedEndOfCode;
+import ledski.askbot.parser.CompilerExceptions.UnexpectedToken;
+import ledski.askbot.parser.SyntaxTree;
+import ledski.askbot.lexer.Automato;
+import ledski.askbot.lexer.ConflictingTransitionException;
+import ledski.askbot.lexer.Token;
 import ledski.util.Gridder;
 
 /**
  * @author Leandro Oliveira Lino de Araujo
  */
 public class Main {
-
-
-	public static void main(String[] args) throws ConflictingTransitionException {
+	
+	
+	public static void main(String[] args) throws ConflictingTransitionException, NonExistentToken, UnexpectedToken, UnexpectedEndOfCode {
 		Automato a2 = new Automato();
 		a2.verboseLevel012 = 2;
 		a2.mostrarCaminhosNoConsole();
 		a2.mostrarEstadosNoConsole();
-
-		String input = "Questao qDfui: \"ola\"";
-		List<Token> tokens = a2.process( input );
+		
+		String input = "Especialidade: \"Teste\" \"Só para testar\" Questao q1: \"ola\"";
+		List<Token> tokenList = a2.process( input );
 		System.out.println( "\n\nTOKENS ENCONTRADOS:" );
 		
-//		for( Token t : tokens ) { System.out.println( t ); } 
 		Gridder gr = new Gridder();	
-		tokens.forEach( t -> gr.append( t.toGridder() ) );
+		tokenList.forEach( t -> gr.append( t.toGridder() ) );
 		System.out.println( gr.publish() );
-
-//		Gramatica gr = new Gramatica( tokenList );
-//		gr.verificar();
+		
+		// GRAMATICA
+		SyntaxTree tree = new SyntaxTree( tokenList );
 	}
+	
+	
 }
