@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class Node {
 
-	public Token token = Token._none;
+	public Token.TokenType tokenType = Token.TokenType._none;
 	
 	public String nome;
 	public boolean marcado = false;
@@ -38,10 +38,10 @@ public class Node {
 	
 	
 	/**
-	 * Caminha por todas as rotas do aut�mato e escreve cada rota do inicio ao fim em uma
-	 * linha do StringBuilder passado. � necessario utilizar System.out.print no StringBuilder
-	 * ap�s chamar este m�todo para visualizar as rotas
-	 * @param listaDeRotas StringBuilder onde ser�o escritas as rotas
+	 * Caminha por todas as rotas do autômato e escreve cada rota do inicio ao fim em uma
+	 * linha do StringBuilder passado. É necessario utilizar System.out.print no StringBuilder
+	 * após chamar este método para visualizar as rotas
+	 * @param listaDeRotas StringBuilder onde serão escritas as rotas
 	 */
 	public void listarRotas( StringBuilder listaDeRotas ) {
 		listarRotas( "", listaDeRotas );
@@ -233,7 +233,7 @@ public class Node {
 	 */
 	public Node createLinks() {
 		// constroi o nome do estado de destino
-		String name = Transition.token.name() + "-" + Transition.nextNodeDepth + ( Transition.isLast() ? "-fim" : "" );
+		String name = Transition.tokenType.name() + "-" + Transition.nextNodeDepth + ( Transition.isLast() ? "-fim" : "" );
 		// decide qual é o estado de destino, se é um novo estado ou se é o próprio estado
 		Node destinationNode = Transition.isSelfLoop ? this : new Node( name );
 		// decide qual é o estado que será inserido no mapa de links ( que é o mapa de char -> node)

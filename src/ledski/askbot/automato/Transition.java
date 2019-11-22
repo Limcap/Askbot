@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import ledski.askbot.automato.Token.TokenType;
+
 /**
  * @author Leandro Oliveira Lino de Araujo
  * @version 0.1.0
@@ -27,50 +29,50 @@ public abstract class Transition {
 	
 	
 	// Transicoes - Simbolos reservados
-	public static final Map<Token, String> pathMap = Stream.of(new Object[][] { 
-		{Token.Sistema,		"S i s t e m a [whs]"},
-		{Token.Questao,		"Q u e s t a o [whs]"},
-		{Token.Teste,			"T e s t e [whs]"},
-		{Token.String,			"\" []* \" []"},
-		{Token.Inteiro,		"[num] [num]* []"},
-		{Token.Decimal,		"[num] [num]* . [num] [num]* []"},
-		{Token.Se,				"S e [whs]"},
-		{Token.Entao,			"E n t a o [whs]"},
-		{Token.OuSe,			"O u S e [whs]"},
-		{Token.Senao,			"S e n a o [whs]"},
-		{Token.whitespace,		"[whs] [whs]* []"},
-		{Token.parenteses1,	"( []"},
-		{Token.parenteses2,	") []"},
-		{Token.chave1,			"{ []"},
-		{Token.chave2,			"} []"},
-		{Token.igual,			"= []"},
-		{Token.igualIgual,		"= = []"},
-		{Token.maior,			"> []"},
-		{Token.maiorIgual,		"> = []"},
-		{Token.menor,			"< []"},
-		{Token.menorIgual,		"< = []"},
-		{Token.mais,			"+ []"},
-		{Token.menos,			"- []"},
-		{Token.vezes,			"* []"},
-		{Token.potencia,		"^ []"},
-		{Token.barra,			"/ []"},
-		{Token.mod,			"% []"},
-		{Token.e,				"& []"},
-		{Token.ou,				"| []"},
-		{Token.doisPontos,		": []"},
-		{Token.qVar,			"q [alphanum]* []"},
-		{Token.tVar,			"t [alphanum]* []"},
-	}).collect(Collectors.toMap(data -> (Token) data[0], data -> (String) data[1]));
+	public static final Map<TokenType, String> pathMap = Stream.of(new Object[][] { 
+		{TokenType.Sistema,		"S i s t e m a [whs]"},
+		{TokenType.Questao,		"Q u e s t a o [whs]"},
+		{TokenType.Teste,			"T e s t e [whs]"},
+		{TokenType.String,			"\" []* \" []"},
+		{TokenType.Inteiro,		"[num] [num]* []"},
+		{TokenType.Decimal,		"[num] [num]* . [num] [num]* []"},
+		{TokenType.Se,				"S e [whs]"},
+		{TokenType.Entao,			"E n t a o [whs]"},
+		{TokenType.OuSe,			"O u S e [whs]"},
+		{TokenType.Senao,			"S e n a o [whs]"},
+		{TokenType.whitespace,		"[whs] [whs]* []"},
+		{TokenType.parenteses1,	"( []"},
+		{TokenType.parenteses2,	") []"},
+		{TokenType.chave1,			"{ []"},
+		{TokenType.chave2,			"} []"},
+		{TokenType.igual,			"= []"},
+		{TokenType.igualIgual,		"= = []"},
+		{TokenType.maior,			"> []"},
+		{TokenType.maiorIgual,		"> = []"},
+		{TokenType.menor,			"< []"},
+		{TokenType.menorIgual,		"< = []"},
+		{TokenType.mais,			"+ []"},
+		{TokenType.menos,			"- []"},
+		{TokenType.vezes,			"* []"},
+		{TokenType.potencia,		"^ []"},
+		{TokenType.barra,			"/ []"},
+		{TokenType.mod,			"% []"},
+		{TokenType.e,				"& []"},
+		{TokenType.ou,				"| []"},
+		{TokenType.doisPontos,		": []"},
+		{TokenType.qVar,			"q [alphanum]* []"},
+		{TokenType.tVar,			"t [alphanum]* []"},
+	}).collect(Collectors.toMap(data -> (TokenType) data[0], data -> (String) data[1]));
 	
 	
 	
-	private static Iterator<Entry<Token,String>> iterator = null;
+	private static Iterator<Entry<TokenType,String>> iterator = null;
 	static private String[] path = null;
 	static public int pathIndex = -1;
 	static public int nextNodeDepth = 0;
 	static private boolean wordIsEntry = false;
 	
-	static public Token token = null;
+	static public TokenType tokenType = TokenType._none;
 	static public boolean hasBrackets = false;
 	static public String transitionStr;// para verbosidade
 	static public String word = null;
@@ -96,7 +98,7 @@ public abstract class Transition {
 	public static void reset() {
 		iterator = pathMap.entrySet().iterator();
 		path = null;
-		token = null;
+		tokenType = null;
 		resetTransitionString();
 	}
 	
@@ -111,7 +113,7 @@ public abstract class Transition {
 		isInverted = false;
 		isSelfLoop = false;
 		pathIndex = -1; // tem q ser menos 1 pq o metodo next incrementa no início.
-		nextNodeDepth = 0;
+		nextNodeDepth = 0; // indica a profundidade do estado no autômato.
 	}
 	
 	
@@ -123,9 +125,9 @@ public abstract class Transition {
 	public static boolean nextPath() {
 		if( iterator == null ) iterator = pathMap.entrySet().iterator();
 		if( iterator.hasNext() ) {
-			Entry<Token,String> entry = iterator.next();
+			Entry<TokenType,String> entry = iterator.next();
 			path = entry.getValue().split( " " );
-			token = entry.getKey();
+			tokenType = entry.getKey();
 			resetTransitionString();
 			return true;
 		}
@@ -136,8 +138,8 @@ public abstract class Transition {
 	
 	
 	/**
-	 * Avança para o próxima string de transição no 'path' atual.
-	 * @return true se houver próxima<br>false se não houver.
+	 * Avança para o próximo string de transição no 'path' atual.
+	 * @return true se houver próximo<br>false se não houver.
 	 */
 	public static boolean next() {
 		if( path.length > pathIndex+1 ) {

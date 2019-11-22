@@ -3,6 +3,7 @@ package ledski.askbot.automato;
 import java.util.ArrayList;
 import java.util.List;
 
+import ledski.askbot.automato.Token.TokenType;
 import ledski.util.Gridder;
 
 /**
@@ -18,9 +19,9 @@ public class Automato {
 	Gridder gr2 = new Gridder( 0, 1, 'l', 'r', 3, false, false, true );
 
 	// variaveis de navegacao do automato
-	private String startNodeName = "inicio";
+	private static final String startNodeName = "inicio";
 	private Node currentNode;
-	private List<Node> listaDeEstados = new ArrayList<Node>();
+	private List<Node> nodeList = new ArrayList<Node>();
 	private StringBuilder lexema = new StringBuilder();
 
 	/**
@@ -42,7 +43,7 @@ public class Automato {
 	 * Reinicia o autômato. Descarta todo oo progresso de navegação feito.
 	 */
 	private void restart() {
-		currentNode = listaDeEstados.get( 0 );
+		currentNode = nodeList.get( 0 );
 		lexema = new StringBuilder();
 	}
 	
@@ -63,13 +64,13 @@ public class Automato {
 			// se o token retornado for de um estado final, entao adiciona o token na lista de resultados, reseta o
 			// automato E REPROCESSA o mesmo caractere, a partir do estado inicial. Isso é necessário porque esse
 			// último char já é o primeiro do próximo token.
-			while( t != Token._none && t != Token._error ) {
+			while( t.type != TokenType._none && t.type != TokenType._error ) {
 				// caso retorne um token, reseta o automato e processa o mesmo charactere novamente
 				resultTokens.add( t );
 				restart();
 				t = process( c );
 			}
-			if( t == Token._error ) {
+			if( t.type == TokenType._error ) {
 				resultTokens.add( t );
 			}
 		}
@@ -84,21 +85,22 @@ public class Automato {
 	 * @return Token
 	 */
 	private Token process( char c ) {
-		if( currentNode == null ) return Token._error;
+		if( currentNode == null ) return new Token(TokenType._error, null);
 		Node nextNode = currentNode.getLinkedNode( c );
 		String nextNodeName = nextNode == null ? "X" : "(" + nextNode.nome + ")";  
 		gr2.text( "("+currentNode.nome+")" ).text( "["+Utils.legivel(c)+"]" ).text( nextNodeName );
 		verbose( 2, gr2 );
 //		verbose( 2, "(" + currentNode.nome + ")\t[" + legivel( c ) + "]\t" + nextNodeName );
 		if( nextNode != null && nextNode.marcado ) {
-			gr1.text("TOKEN: " + nextNode.token.name() ).textLine("LEXEMA: " + Utils.legivel( lexema.toString() ) );
+			gr1.text( "TOKEN: " + nextNode.tokenType.name() )
+			   .textLine( "LEXEMA: " + Utils.legivel( lexema.toString() ) );
 			verbose( 1, gr1 );
 //			verbose( 1, "TOKEN: " + nextNode.token.name() + "\nLEXEMA: " + legivel( lexema.toString() ) );
 		} else {
 			currentNode = nextNode;
 		}
 		lexema.append( c );
-		return nextNode != null ? nextNode.token : Token._error;
+		return new Token( nextNode != null ? nextNode.tokenType : TokenType._error, lexema.toString() );
 	}
 	
 	
@@ -109,8 +111,7 @@ public class Automato {
 	 * @return
 	 */
 	public Token currentToken() {
-		if( currentNode == null ) return Token._error;
-		return currentNode.token;
+		return new Token( currentNode == null ? TokenType._error : currentNode.tokenType, lexema.toString() );
 	}
 	
 	
@@ -128,21 +129,21 @@ public class Automato {
 	private void build() throws ConflictingTransitionException {
 		Transition.reset();
 		Node node = new Node( startNodeName );
-		listaDeEstados.add( node );
+		nodeList.add( node );
 		while( Transition.nextPath() ) {
-			node = listaDeEstados.get(0);
+			node = nodeList.get(0);
 			while( Transition.next() ) {
 				Node nextNode = node.calcNodeFromCurrentTransition();
 				if( nextNode == null ) {
 					nextNode = node.createLinks();
 					// Não insere o nextNode na lista se a transição atual for um loop, pois o next node
 					// será o mesmo do atual, que já terá sido inserido antes.
-					if( !Transition.isSelfLoop ) listaDeEstados.add( nextNode );
+					if( !Transition.isSelfLoop ) nodeList.add( nextNode );
 				}
 				node = nextNode;
 			}
 			node.marcado = true;
-			node.token = Transition.token;
+			node.tokenType = Transition.tokenType;
 		}
 	}
 	
@@ -160,7 +161,7 @@ public class Automato {
 //		for( Map.Entry<String, Estado> entry : this.mapaDeEstados.entrySet() ) {
 //			System.out.println( entry.getValue().toString() );
 //		}
-		for( Node e : listaDeEstados ) {
+		for( Node e : nodeList ) {
 			System.out.println( e );
 		}
 	}
@@ -172,7 +173,7 @@ public class Automato {
 	public void mostrarCaminhosNoConsole() {
 		StringBuilder listaDeRotas = new StringBuilder();
 //		this.mapaDeEstados.get("inicio-var").listarRotas( listaDeRotas );
-		listaDeEstados.get(0).listarRotas( listaDeRotas );
+		nodeList.get(0).listarRotas( listaDeRotas );
 //		this.estadoInicial.listarRotas( listaDeRotas );
 		System.out.println( listaDeRotas.toString() );
 	}
@@ -187,7 +188,7 @@ public class Automato {
 		if( this.verboseLevel012 <= 1 &&
 			!this.verboseWhitespaceTokens &&
 			this.currentNode != null &&
-			this.currentNode.token == Token.whitespace
+			this.currentNode.tokenType == TokenType.whitespace
 			) return;
 		if( this.verboseLevel012 >= level ) System.out.println( gr.publish() );
 	}
