@@ -22,6 +22,7 @@ public abstract class Transition {
 	// Dicionario
 	public static final Map<String, String> dict = Stream.of(new Object[][] { 
 		{"whs",          " \t\n\r"},
+		{"end",          ":; \t\n\r"},
 		{"num",          "0123456789"},
 		{"fs1",          "=-+"},
 		{"alphanum",     "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVxXwWyYzZ_0987654321"},
@@ -31,16 +32,16 @@ public abstract class Transition {
 	
 	// Transicoes do estado incial até o estado marcado e o token relacionado
 	public static final Map<TokenType, String> pathMap = Stream.of(new Object[][] { 
-		{_Especialidade, "S i s t e m a [whs]"},
-		{_Questao,       "Q u e s t a o [whs]"},
-		{_Teste,         "T e s t e [whs]"},
+		{_Especialidade, "E s p e c i a l i d a d e [end]"},
+		{_Questao,       "Q u e s t a o [end]"},
+		{_Teste,         "T e s t e [end]"},
 		{_String,        "\" []* \" []"},
 		{_Inteiro,       "[num] [num]* []"},
 		{_Decimal,       "[num] [num]* . [num] [num]* []"},
-		{_Se,            "S e [whs]"},
-		{_Entao,         "E n t a o [whs]"},
-		{_OuSe,          "O u S e [whs]"},
-		{_Senao,         "S e n a o [whs]"},
+		{_Se,            "S e [end]"},
+		{_Entao,         "E n t a o [end]"},
+		{_OuSe,          "O u S e [end]"},
+		{_Senao,         "S e n a o [end]"},
 		{_whitespace,    "[whs] [whs]* []"},
 		{_parenteses1,   "( []"},
 		{_parenteses2,   ") []"},
@@ -127,7 +128,7 @@ public abstract class Transition {
 		if( iterator == null ) iterator = pathMap.entrySet().iterator();
 		if( iterator.hasNext() ) {
 			Entry<TokenType,String> entry = iterator.next();
-			path = entry.getValue().split( " " );
+			path = entry.getValue().split( "(?<!\\[)(\\s)+(?!\\])" );
 			tokenType = entry.getKey();
 			resetTransitionString();
 			return true;
