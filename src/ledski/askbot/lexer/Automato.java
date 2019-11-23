@@ -23,6 +23,7 @@ public class Automato {
 	private Node currentNode;
 	private List<Node> nodeList = new ArrayList<Node>();
 	private StringBuilder lexema = new StringBuilder();
+	private boolean isInErrorState = false;
 
 	/**
 	 * Construtor
@@ -55,6 +56,7 @@ public class Automato {
 	 * @return Uma lista dos Tokens finais e de erro encontrados
 	 */
 	public List<Token> process( String s ) {
+		if( isInErrorState ) throw new RuntimeException( "\nAtomata is in error state" );
 		List<Token> resultTokens = new ArrayList<Token>();
 		Token t;
 		char[] charArray = s.toCharArray();
@@ -98,6 +100,7 @@ public class Automato {
 		if( nextNode == null ) {
 			lexema.append( c );
 			token = new Token( TokenType._error, lexema.toString() );
+			isInErrorState = true;
 		}
 		else if( nextNode.marcado ) {
 			// Caso o estado seja marcado, o char de transição nao é incluido no lexema do token,
