@@ -3,8 +3,6 @@ package ledski.askbot.parser.rules;
 import java.util.ArrayList;
 import java.util.List;
 
-import ledski.askbot.parser.CompilerExceptions.NotAToken;
-import ledski.askbot.parser.CompilerExceptions.UnfinishedCode;
 import ledski.askbot.parser.CompilerExceptions.UnexpectedToken;
 import ledski.askbot.parser.GrammarRule;
 import ledski.askbot.parser.SyntaxManager;
@@ -18,15 +16,15 @@ public class ListaDeTestes extends GrammarRule {
 	
 	public List<Teste> listaDeTestes;
 
-	public ListaDeTestes( SyntaxManager code ) throws UnfinishedCode, NotAToken {
-		super( code );
+	public ListaDeTestes() throws Exception { // NotAToken, UnfinishedCode
+		SyntaxManager sm = new SyntaxManager();
 		
 		listaDeTestes = new ArrayList<Teste>();
 		try {
-			listaDeTestes.add( new Teste( code ) );
-			listaDeTestes.addAll( new ListaDeTestes( code ).listaDeTestes );
+			listaDeTestes.add( new Teste() );
+			listaDeTestes.addAll( new ListaDeTestes().listaDeTestes );
 		} catch( UnexpectedToken e ) {
-			code.resetRulePointer();
+			sm.resetRulePointer();
 		}
 	}
 

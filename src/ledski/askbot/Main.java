@@ -23,7 +23,7 @@ public class Main {
 		a2.mostrarCaminhosNoConsole();
 		a2.mostrarEstadosNoConsole();
 		
-		String input = "Especialidade: \"Teste\" \"Só para testar\" Questao q1: \"ola\" Questao q2: \"Segunda Questao\" {10-20} Teste t1: \"Teste1\" Teste t2: \"Mais um teste\"";
+		String input = "Especialidade: \"Teste\" \"Só para testar\" Questao q1: \"ola\" {} Questao q2: \"Segunda Questao\" {10-20} Teste t1: \"Teste1\" Teste t2: \"Mais um teste\"";
 		List<Token> tokenList = a2.process( input );
 		
 		System.out.println( "\n\nTOKENS ENCONTRADOS:" );

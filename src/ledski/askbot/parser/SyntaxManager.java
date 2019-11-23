@@ -17,21 +17,23 @@ import ledski.askbot.parser.CompilerExceptions.UnexpectedToken;
  * @author Leandro
  *
  */
-public class TokenizedCodeManager {
+public class SyntaxManager {
 	
 	private static List<Token> tokenList;
 	private static int pointer2 = 0;
+	public static Exception savedException = null;
+	public static int savedExceptionIndexOfToken;
 
 	public static void setTokenList( List<Token> t ) {
 		tokenList = t;
+		pointer2 = 0;
 	}
 	
 	
 	
-	public TokenizedCodeManager( int startIndex ) {
-		this.startIndex = startIndex;
+	public SyntaxManager() {
+		this.startIndex = pointer2;
 	}
-	
 	
 	
 	private final int startIndex;
@@ -39,20 +41,60 @@ public class TokenizedCodeManager {
 	
 	
 	public Token getNextToken( TokenType type ) throws UnexpectedToken, NotAToken, UnfinishedCode {
-		if( pointer2 > tokenList.size()-1 ) {
-			throw new CompilerExceptions.UnfinishedCode("");
+		Token t;
+		try {
+			if( pointer2 > tokenList.size()-1 ) {
+				throw new CompilerExceptions.UnfinishedCode();
+			}
+			t = tokenList.get( pointer2++ );
+			if( t.type == TokenType._error ) {
+				throw new CompilerExceptions.NotAToken( t, pointer2 );
+			}
+			else if( t.type != type ) {
+				throw new CompilerExceptions.UnexpectedToken( t, pointer2  );
+			}
 		}
-		Token t = tokenList.get( pointer2++ );
-		if( t.type == TokenType._error ) {
-			String msg = "\n" + t.toString() + "\nINDEX: " + pointer2;
-			throw new CompilerExceptions.NotAToken( msg );
-		}
-		else if( t.type != type ) {
-			String msg = "\n" + t.toString() + "\nINDEX: " + pointer2;
-			throw new CompilerExceptions.UnexpectedToken( msg );
+		catch( UnexpectedToken | NotAToken | UnfinishedCode e ) {
+			saveException( e );
+			throw e;
 		}
 		System.out.println( pointer2 + " " + t.type + " " + t.lexema );
 		return t;
+	}
+	
+	
+	
+	public int peekPointer() {
+		return pointer2;
+	}
+	
+	
+	
+	/**
+	 * Quando ocorre uma exceção UnexpectedToken em uma regra opcional, a excessão é ignorada,
+	 * porém deve ser salva para uso posterior, que será:
+	 * 1- Se o parser encontrar um erro obrigatório com indice menor ao do erro obrigatório.
+	 * 2- Se o parser chegar ao final das regras sem encontrar uma exceção obrigatória. 
+	 * @param e
+	 */
+	public void saveException( Exception e ) {
+		if( SyntaxManager.savedExceptionIndexOfToken < pointer2 ) {
+			SyntaxManager.savedExceptionIndexOfToken = pointer2;
+			SyntaxManager.savedException = e;
+		}
+	}
+	
+	
+	
+	public void rethrowSavedExceptionFromCatchBlock() throws Exception {
+		throw savedException;
+	}
+	
+	
+	
+	public void throwSavedExceptionAtTheEndOfStartRule() throws Exception {
+		if( pointer2 <= savedExceptionIndexOfToken )
+			throw savedException;
 	}
 	
 	

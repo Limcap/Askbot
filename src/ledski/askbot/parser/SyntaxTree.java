@@ -14,7 +14,7 @@ public class SyntaxTree {
 		
 		SyntaxManager.setTokenList( tokenList );
 		
-		inicio = new Especialidade( SyntaxManager.optionalRule( false ) );
+		inicio = new Especialidade();
 		
 	}
 

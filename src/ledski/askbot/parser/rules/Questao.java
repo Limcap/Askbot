@@ -19,23 +19,23 @@ public class Questao extends GrammarRule {
 	public Range range;
 	
 	
-	public Questao( SyntaxManager code ) throws UnexpectedToken, NotAToken, UnfinishedCode {
-		super( code );
+	public Questao() throws Exception {
+		SyntaxManager sm = new SyntaxManager();
 
 		try {
-			code.getNextToken( _Questao );
+			sm.getNextToken( _Questao );
 
-			variavel = code.getNextToken( _qVar ).lexema;
-			code.getNextToken( _doisPontos );
-			questao = code.getNextToken( _String ).lexema;
+			variavel = sm.getNextToken( _qVar ).lexema;
+			sm.getNextToken( _doisPontos );
+			questao = sm.getNextToken( _String ).lexema;
 		
-			ArrayResposta ar = new ArrayResposta( code );
+			ArrayResposta ar = new ArrayResposta();
 			tipoDeArray = ar.tipoDeArray;
 		}
 		catch ( UnexpectedToken e ) {
 			System.out.println( "Questão não encontrada" );
-			code.resetRulePointer();
-			throw e;
+			sm.resetRulePointer();
+			sm.rethrowSavedExceptionFromCatchBlock();
 		}
 	}
 

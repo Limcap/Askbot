@@ -17,20 +17,20 @@ public class ListaDeQuestoes extends GrammarRule {
 	
 	public List<Questao> listaDeQuestoes;
 	
-	public ListaDeQuestoes( SyntaxManager code ) throws UnfinishedCode, NotAToken {
-		super( code );
+	public ListaDeQuestoes() throws Exception { // UnfinishedCode, NotAToken
+		SyntaxManager sm = new SyntaxManager();
+		
 		listaDeQuestoes = new ArrayList<Questao>();
-	
 		// Como a regra pode ser vazia, exceções de token são ignoradas e o ponteiro de tokens do
 		// tekenizedCodeManager é reposicionado para o índice onde estava no início da regra.
 		try {
-			listaDeQuestoes.add( new Questao( code ) );
-			listaDeQuestoes.addAll( new ListaDeQuestoes( code ).listaDeQuestoes );
+			listaDeQuestoes.add( new Questao() );
+			listaDeQuestoes.addAll( new ListaDeQuestoes().listaDeQuestoes );
 		}
 		catch( UnexpectedToken e ) {
-			code.resetRulePointer();
+			sm.resetRulePointer();
 		}
-
+		
 	}
-
+	
 }

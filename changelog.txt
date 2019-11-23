@@ -9,7 +9,43 @@ Isso evidencia o problema de que nesse caso um erro nunca será emitido. O compi
 pelo erro, identificar, mas como é opcional não vai emitir e a interpretação das regras vai
 finalizar com sucesso.
 
-TENTATIVA SOLUÇÃO:
+
+SOLUÇÃO MELHOR:
+- Remover o SyntaxManager de ser passado como parâmetro
+- Remover o SyntaxManager.optionalRule() : SM será criado dentro das regras mas de forma normal:
+SyntaxManager sm = new SyntaxManager()
+- Remover sistema de stackLevel
+
+A solução consiste em simplesmente:
+Todas as regras exceto a inicial irão executar seus códigos dentro de um bloco try-catch.
+No bloco catch sempre vai ser chamado sm.resetRulePointer() para que caso a regra falhe, o 
+ponteiro da lista de token retorne ao indice onde estava antes da regra iniciar.
+Abaixo desse comando, CASO a regra NÃO seja opcional, será chamado:
+  sm.rethrowSavedExceptionFromCatchBlock()
+Esse método, do SyntaxManager, irá então reemitir o erro que estiver salvo. Ou seja, sempre que
+ocorrer um erro em uma regra não-opcional ele será capturado e em seu lugar será emitido o erro que
+foi salvo. Ou seja o erro salvo sempre será emitido quando acontecer um erro. E como a regra inicial
+não é opcional, quando ela acabar de executar alguma regra opcional que tenha chamado: BUM! o erro
+emitido terá chegado a um nível de execução que não tem catch, e irá finalmente aparecer.
+Perfeito sem precisar de geringonças!
+
+Considera a regra: INICIO -> Questao ListaDeQuestoes Teste ListaDeTestes
+Digamos que a regra Questao passe ok, mas a ListaDeQuestoes dê erro pois o usuário escreveu uma
+questao pela metade. Então o erro é salvo, mas como a regra é opcional ela nao emite um erro. A
+próxima regra é Teste que inevitavelmente vai dar erro, pois como a anterior falhou, o resetRulePointer
+voltou ao index do token que começou a Questao que foi deixada pela metade. Quando a regra Teste
+falhar, como ela não é opcional ela irá emitir um erro, que será capturado e em seu lugar será
+emitido o erro salvo, que é o erro da ListaDeQuestões. TA-DA!
+Caso o erro ocorra só na ultima regra, ListaDeTestes, como ela é opcional não irá emitir um erro, e
+como ela é a ultima e não existe uma outra regra não opcional depois para emitir o erro, ele vai
+ser ignorado e a execução terminará com sucesso. Para evitar isso, ao final da regra inicial deve
+ser chamado o métod:
+  throwSavedExceptionAtTheEndOfStartRule()
+que irá emitir o erro salvo se o index do erro for mior do que o pointer.
+
+--------------------------------------
+
+TENTATIVA SOLUÇÃO ANTORIOR:
 Alteração do método getNextToken para que quando um erro for emitido, ele seja salvo em um static
 field na classe SystaxManager, junto com o index do token em que ocorreu. Sempre que um erro for
 emitido, o método de salvamento só irá salvar o erro se o index do token desse erro for maior que

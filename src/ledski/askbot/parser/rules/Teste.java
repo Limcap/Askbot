@@ -14,22 +14,22 @@ public class Teste extends GrammarRule {
 //	public Condicao condicao;
 	
 	
-	public Teste( SyntaxManager code ) throws UnexpectedToken, NotAToken, UnfinishedCode {
-		super( code );
+	public Teste() throws Exception { //UnexpectedToken, NotAToken, UnfinishedCode
+		SyntaxManager sm = new SyntaxManager();
 		
 		try {
-			code.getNextToken( _Teste );
+			sm.getNextToken( _Teste );
 			
-			variavel = code.getNextToken( _tVar ).lexema;
+			variavel = sm.getNextToken( _tVar ).lexema;
 			
-			code.getNextToken( _doisPontos );
+			sm.getNextToken( _doisPontos );
 			
-			code.getNextToken( _String );
+			sm.getNextToken( _String );
 //			condicao = new Condicao( code );
 		}
 		catch( UnexpectedToken e ) {
-			code.resetRulePointer();
-			throw e;
+			sm.resetRulePointer();
+			sm.rethrowSavedExceptionFromCatchBlock();
 		}
 		
 	}

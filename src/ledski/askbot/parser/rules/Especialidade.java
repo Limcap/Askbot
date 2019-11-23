@@ -19,22 +19,21 @@ public class Especialidade extends GrammarRule {
 	public List<Questao> listaDeQuestoes;
 	public List<Teste> listaDeTestes;
 	
-	public Especialidade( SyntaxManager rm ) throws Exception, NotAToken, UnexpectedToken, UnfinishedCode {
-		super( rm );
-		SyntaxManager sm = SyntaxManager.optionalRule( true );
+	public Especialidade() throws Exception, NotAToken, UnexpectedToken, UnfinishedCode {
+		SyntaxManager sm = new SyntaxManager();
 		
 		
-		rm.getNextToken( _Especialidade );
-		rm.getNextToken( _doisPontos );
+		sm.getNextToken( _Especialidade );
+		sm.getNextToken( _doisPontos );
 		
-		name = rm.getNextToken( _String ).lexema;
-		description = rm.getNextToken( _String ).lexema;
+		name = sm.getNextToken( _String ).lexema;
+		description = sm.getNextToken( _String ).lexema;
 
-		listaDeQuestoes = new ListaDeQuestoes( rm ).listaDeQuestoes;
+		listaDeQuestoes = new ListaDeQuestoes().listaDeQuestoes;
 		
-		listaDeTestes = new ListaDeTestes( rm ).listaDeTestes;
+		listaDeTestes = new ListaDeTestes().listaDeTestes;
 		
-		sm.throwSavedException();
+		sm.throwSavedExceptionAtTheEndOfStartRule();
 	}
 
 }
