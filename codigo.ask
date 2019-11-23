@@ -4,11 +4,11 @@ Especialidade:
 
 Questao q1:
 "Qual é a sua cor preferida?"
-{ "Vermelho", "Verde", "Azul", "Amarelo", "Rosa", "Laranja", "Branco", "Preto" }
+[ "Vermelho", "Verde", "Azul", "Amarelo", "Rosa", "Laranja", "Branco", "Preto" ]
 
 Questao q2:
 "Qual o tom vc prefere? Números menores para mais tons escuros."
-[ 1 - 10 }
+[ 1 - 10 ]
 
 Teste t1:
 "Nossa cor favorita é a mesma?"

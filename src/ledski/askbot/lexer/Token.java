@@ -41,7 +41,7 @@ public class Token {
 	_igual,
 	_mais, _menos, _vezes, _barra, _potencia, _mod, _e, _ou,
 	_maior, _maiorIgual, _menor, _menorIgual, _igualIgual,
-	_parenteses1, _parenteses2, _chave1, _chave2, _doisPontos, _virgula,
+	_parenteses1, _parenteses2, _colchete1, _colchete2, _doisPontos, _virgula,
 	_error, _none, 
 	}
 }

@@ -45,8 +45,8 @@ public abstract class Transition {
 		{_whitespace,    "[whs] [whs]* []"},
 		{_parenteses1,   "( []"},
 		{_parenteses2,   ") []"},
-		{_chave1,        "{ []"},
-		{_chave2,        "} []"},
+		{_colchete1,     "[ []"},
+		{_colchete2,     "] []"},
 		{_igual,         "= []"},
 		{_igualIgual,    "= = []"},
 		{_maior,         "> []"},
@@ -129,7 +129,7 @@ public abstract class Transition {
 		if( iterator == null ) iterator = pathMap.entrySet().iterator();
 		if( iterator.hasNext() ) {
 			Entry<TokenType,String> entry = iterator.next();
-			path = entry.getValue().split( "(?<!\\[)(\\s)+(?!\\])" );
+			path = entry.getValue().split( " " ); //"(?<!\\[)(\\s)+(?!\\])"
 			tokenType = entry.getKey();
 			resetTransitionString();
 			return true;

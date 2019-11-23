@@ -30,8 +30,8 @@ public class ArrayResposta extends SyntaxRule {
 		
 		// array vazio - é reconhecido, mas nao pode.
 		if( sm.noSuccessYet() ) try {
-			sm.getNextToken( _chave1 );
-			sm.getNextToken( _chave2 );
+			sm.getNextToken( _colchete1 );
+			sm.getNextToken( _colchete2 );
 			sm.saveException( new EmptyArray( sm.peekPointer() ) );
 			sm.rethrowSavedExceptionFromCatchBlock();
 		}
@@ -42,11 +42,11 @@ public class ArrayResposta extends SyntaxRule {
 		
 		// conteudo de array de range
 		try {
-			sm.getNextToken( _chave1 );
+			sm.getNextToken( _colchete1 );
 			min = Double.valueOf( sm.getNextToken( _Inteiro ).lexema );
 			sm.getNextToken( _menos );
 			max = Double.valueOf( sm.getNextToken( _Inteiro ).lexema );
-			sm.getNextToken( _chave2 );
+			sm.getNextToken( _colchete2 );
 		}
 		catch ( UnexpectedToken e ) {
 			sm.resetRulePointer();
@@ -56,11 +56,11 @@ public class ArrayResposta extends SyntaxRule {
 		
 		// conteudo de array de items
 		if( sm.noSuccessYet() ) try {
-			sm.getNextToken( _chave1 );
+			sm.getNextToken( _colchete1 );
 			listaDeItems = new ArrayList<Item>();
 			listaDeItems.add( new Item() );
 			listaDeItems.addAll( new ItemsAdicionais().itemsAdicionais );
-			sm.getNextToken( _chave2 );
+			sm.getNextToken( _colchete2 );
 		}
 		catch ( UnexpectedToken e ) {
 			sm.resetRulePointer();

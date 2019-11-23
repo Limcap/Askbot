@@ -1,3 +1,11 @@
+Substituido o token _chave1 e _chave2 por _colchete1 e _colchete2.
+Na difinição dos path de transição foi necessário voltar a fazer o split no caractere " " (espaço)
+sem os lookaheads pq os paths "] []" e : "[ []" não estava sendo splitted.
+ 
+================================================================================
+ANTERIOR
+================================================================================
+
 A classe Main foi autalizada para incluir um codigo que lê um arquivo chamado codigo.ask e passar
 as linhas desse arquivo para o Lexer.
 
