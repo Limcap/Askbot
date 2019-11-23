@@ -62,6 +62,7 @@ public abstract class Transition {
 		{_e,             "& []"},
 		{_ou,            "| []"},
 		{_doisPontos,    ": []"},
+		{_virgula,       ", []"},
 		{_qVar,          "q [alphanum]* []"},
 		{_tVar,          "t [alphanum]* []"},
 	}).collect(Collectors.toMap(data -> (TokenType) data[0], data -> (String) data[1]));
