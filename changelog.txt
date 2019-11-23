@@ -1,0 +1,38 @@
+PROBLEMA:
+Sistema de Exceptions em regras opcionais (que podem ser 'vazias'). O método getNextToken
+do SystaxManager (antes chamado de TokenizedCodeManager) é o método que emite erros caso não
+encontre o token que está procurando. Porém quando o getNextToken é chamado de dentro de uma regra
+opcional, o erro é capturado pelo block catch para que regras opcionais não dêem erro.
+O problema é que na regra principal (regra INICIO) as duas ultimas regras são opcionais.
+A regra é: (INICIO -> Especialidade  String  String  LISTA_DE_QUESTOES  LISTA_DE_TESTES)
+Isso evidencia o problema de que nesse caso um erro nunca será emitido. O compilador vai passar
+pelo erro, identificar, mas como é opcional não vai emitir e a interpretação das regras vai
+finalizar com sucesso.
+
+TENTATIVA SOLUÇÃO:
+Alteração do método getNextToken para que quando um erro for emitido, ele seja salvo em um static
+field na classe SystaxManager, junto com o index do token em que ocorreu. Sempre que um erro for
+emitido, o método de salvamento só irá salvar o erro se o index do token desse erro for maior que
+o index do token do erro que já está salvo. Desse forma é garantido que o erro salvo sempe será o 
+que aconteceu no token de index maior, ou seja, que o compilador sempre interpretou o numero
+máximo de tokens que conseguiu. Porém ainda não se resolveu o problema, é necessário ainda emitir
+o erro salvo.
+
+OBS:
+A Estratégia de se passar o SyntaxManager por parâmetro e ter a regra abstrata pai GrammarRule
+criar um novo SM para a regra filha não funciona pq para que funcionasse teria que se criar
+um field dentro da GrammarRule para alocar o SM. Não quero fazer isso pois as Regras devem ter
+somente fields relacionados à SyntexTree, para que os objetos da árvore não contenham resquícios
+de campos e métodos relacionados ao processo de compilação.
+
+Para a segunda parte da solução, tentarei criar um sistema de StakLevel
+Dentro do contrutor das regras terá que ser criado explicitamente um SyntaxManager e informado
+segunda a regra é opcional ou não. Isso será feito fazendo:
+sm = SyntaxManager.optionalRule( true/false )
+Esse método cria um novo SyntaxManager e o configura como opicional ou nal.
+Além disso sempre que um SM for criada, o campo static lowestOptionalStackLevel no SyntaxManager
+será atualizado, de acordo com a optionalRule. Se a SM for criado com optionalRule = false, entao
+ele vai verificar se o stackLevel atual é maior ou menor que o lowestOptionalStackLevel, dessa
+forma garantindo que uma regra não opcional dentro de uma regra opcional tb seja opicional.
+
+Agora falta identificar quando uma regra nao for opcional para emitir o erro salvo.

@@ -5,7 +5,7 @@ import static ledski.askbot.lexer.Token.TokenType.*;
 import java.util.List;
 
 import ledski.askbot.parser.GrammarRule;
-import ledski.askbot.parser.TokenizedCodeManager;
+import ledski.askbot.parser.SyntaxManager;
 import ledski.askbot.parser.CompilerExceptions.*;
 
 /**
@@ -19,18 +19,22 @@ public class Especialidade extends GrammarRule {
 	public List<Questao> listaDeQuestoes;
 	public List<Teste> listaDeTestes;
 	
-	public Especialidade( TokenizedCodeManager code ) throws NotAToken, UnexpectedToken, UnfinishedCode {
-		super( code );
+	public Especialidade( SyntaxManager rm ) throws Exception, NotAToken, UnexpectedToken, UnfinishedCode {
+		super( rm );
+		SyntaxManager sm = SyntaxManager.optionalRule( true );
 		
-		code.getNextToken( _Especialidade );
-		code.getNextToken( _doisPontos );
 		
-		name = code.getNextToken( _String ).lexema;
-		description = code.getNextToken( _String ).lexema;
+		rm.getNextToken( _Especialidade );
+		rm.getNextToken( _doisPontos );
+		
+		name = rm.getNextToken( _String ).lexema;
+		description = rm.getNextToken( _String ).lexema;
 
-		listaDeQuestoes = new ListaDeQuestoes( code ).listaDeQuestoes;
+		listaDeQuestoes = new ListaDeQuestoes( rm ).listaDeQuestoes;
 		
-		listaDeTestes = new ListaDeTestes( code ).listaDeTestes;
+		listaDeTestes = new ListaDeTestes( rm ).listaDeTestes;
+		
+		sm.throwSavedException();
 	}
 
 }

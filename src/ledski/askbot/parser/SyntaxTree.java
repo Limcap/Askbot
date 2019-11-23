@@ -10,11 +10,11 @@ public class SyntaxTree {
 	
 	public Especialidade inicio;
 
-	public SyntaxTree( List<Token> tokenList ) throws NotAToken, UnexpectedToken, UnfinishedCode {
+	public SyntaxTree( List<Token> tokenList ) throws Exception, NotAToken, UnexpectedToken, UnfinishedCode {
 		
-		TokenizedCodeManager.setTokenList( tokenList );
+		SyntaxManager.setTokenList( tokenList );
 		
-		inicio = new Especialidade( new TokenizedCodeManager( 0 ) );
+		inicio = new Especialidade( SyntaxManager.optionalRule( false ) );
 		
 	}
 

@@ -3,7 +3,7 @@ package ledski.askbot.parser.rules;
 import static ledski.askbot.lexer.Token.TokenType.*;
 
 import ledski.askbot.parser.GrammarRule;
-import ledski.askbot.parser.TokenizedCodeManager;
+import ledski.askbot.parser.SyntaxManager;
 import ledski.askbot.parser.CompilerExceptions.*;
 
 /** 
@@ -19,7 +19,7 @@ public class Questao extends GrammarRule {
 	public Range range;
 	
 	
-	public Questao( TokenizedCodeManager code ) throws UnexpectedToken, NotAToken, UnfinishedCode {
+	public Questao( SyntaxManager code ) throws UnexpectedToken, NotAToken, UnfinishedCode {
 		super( code );
 
 		try {

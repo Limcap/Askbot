@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ledski.askbot.parser.GrammarRule;
-import ledski.askbot.parser.TokenizedCodeManager;
+import ledski.askbot.parser.SyntaxManager;
 import ledski.askbot.parser.CompilerExceptions.*;
 
 /**
@@ -17,7 +17,7 @@ public class ListaDeQuestoes extends GrammarRule {
 	
 	public List<Questao> listaDeQuestoes;
 	
-	public ListaDeQuestoes( TokenizedCodeManager code ) throws UnfinishedCode, NotAToken {
+	public ListaDeQuestoes( SyntaxManager code ) throws UnfinishedCode, NotAToken {
 		super( code );
 		listaDeQuestoes = new ArrayList<Questao>();
 	

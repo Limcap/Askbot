@@ -7,7 +7,7 @@ import ledski.askbot.parser.CompilerExceptions.NotAToken;
 import ledski.askbot.parser.CompilerExceptions.UnfinishedCode;
 import ledski.askbot.parser.CompilerExceptions.UnexpectedToken;
 import ledski.askbot.parser.GrammarRule;
-import ledski.askbot.parser.TokenizedCodeManager;
+import ledski.askbot.parser.SyntaxManager;
 
 /**
  * Regra:
@@ -18,7 +18,7 @@ public class ListaDeTestes extends GrammarRule {
 	
 	public List<Teste> listaDeTestes;
 
-	public ListaDeTestes( TokenizedCodeManager code ) throws UnfinishedCode, NotAToken {
+	public ListaDeTestes( SyntaxManager code ) throws UnfinishedCode, NotAToken {
 		super( code );
 		
 		listaDeTestes = new ArrayList<Teste>();

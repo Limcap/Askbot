@@ -7,9 +7,9 @@ public abstract class GrammarRule {
 //	boolean isSuccess = false;
 	
 //	public GrammarRule( List<Token> tokenList, int startIndex ) {}
-	public GrammarRule( TokenizedCodeManager code ) {
-//		code = code.advanceStartIndex();
+	public GrammarRule( SyntaxManager rm ) {
 		System.out.println( "\n" + Thread.currentThread().getStackTrace()[2].getClassName().substring( 21 ) );
+		System.out.println( "stacklevel " + Thread.currentThread().getStackTrace().length );
 	}
 
 

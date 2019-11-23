@@ -17,7 +17,7 @@ import ledski.util.Gridder;
 public class Main {
 	
 	
-	public static void main(String[] args) throws ConflictingTransitionException, NotAToken, UnexpectedToken, UnfinishedCode {
+	public static void main(String[] args) throws ConflictingTransitionException, NotAToken, UnexpectedToken, UnfinishedCode, Exception {
 		Automato a2 = new Automato();
 		a2.verboseLevel012 = 2;
 		a2.mostrarCaminhosNoConsole();
