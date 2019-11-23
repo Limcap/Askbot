@@ -5,8 +5,8 @@ import static ledski.askbot.lexer.Token.TokenType.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import ledski.askbot.parser.CompilerExceptions.*;
-import ledski.askbot.parser.GrammarRule;
+import ledski.askbot.parser.SyntaxExceptions.*;
+import ledski.askbot.parser.SyntaxRule;
 import ledski.askbot.parser.SyntaxManager;
 
 
@@ -16,7 +16,7 @@ import ledski.askbot.parser.SyntaxManager;
  * ARRAY_RESPOSTA -> [  NUMERO - NUMERO  ]  |  [  LISTA_DE_ITEM  ] |  [  ]
  * @author Leandro Ledski
  */
-public class ArrayResposta extends GrammarRule {
+public class ArrayResposta extends SyntaxRule {
 
 	public byte tipoDeArray;
 	public Double min;

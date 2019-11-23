@@ -4,9 +4,9 @@ import java.util.List;
 
 import ledski.askbot.lexer.Token;
 import ledski.askbot.lexer.Token.TokenType;
-import ledski.askbot.parser.CompilerExceptions.NotAToken;
-import ledski.askbot.parser.CompilerExceptions.UnfinishedCode;
-import ledski.askbot.parser.CompilerExceptions.UnexpectedToken;
+import ledski.askbot.parser.SyntaxExceptions.NotAToken;
+import ledski.askbot.parser.SyntaxExceptions.UnfinishedCode;
+import ledski.askbot.parser.SyntaxExceptions.UnexpectedToken;
 
 /**
  * Esta classe cria um objeto para gerenciar a manipulação dos tokens pelas regras da gramática.
@@ -44,14 +44,14 @@ public class SyntaxManager {
 		Token t;
 		try {
 			if( pointer2 > tokenList.size()-1 ) {
-				throw new CompilerExceptions.UnfinishedCode();
+				throw new SyntaxExceptions.UnfinishedCode();
 			}
 			t = tokenList.get( pointer2++ );
 			if( t.type == TokenType._error ) {
-				throw new CompilerExceptions.NotAToken( t, pointer2 );
+				throw new SyntaxExceptions.NotAToken( t, pointer2 );
 			}
 			else if( t.type != type ) {
-				throw new CompilerExceptions.UnexpectedToken( t, pointer2  );
+				throw new SyntaxExceptions.UnexpectedToken( t, pointer2  );
 			}
 		}
 		catch( UnexpectedToken | NotAToken | UnfinishedCode e ) {

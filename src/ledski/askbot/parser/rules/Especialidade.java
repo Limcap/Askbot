@@ -1,15 +1,15 @@
 package ledski.askbot.parser.rules;
 
 import static ledski.askbot.lexer.Token.TokenType.*;
-import ledski.askbot.parser.CompilerExceptions.*;
-import ledski.askbot.parser.GrammarRule;
+import ledski.askbot.parser.SyntaxExceptions.*;
+import ledski.askbot.parser.SyntaxRule;
 import ledski.askbot.parser.SyntaxManager;
 
 /**
  * Regra:
  * ESPECIALIDADE -> Especialidade  :  String String
  */
-public class Especialidade extends GrammarRule {
+public class Especialidade extends SyntaxRule {
 	
 	public String name;
 	public String description;

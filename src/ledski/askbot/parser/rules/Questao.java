@@ -2,15 +2,15 @@ package ledski.askbot.parser.rules;
 
 import static ledski.askbot.lexer.Token.TokenType.*;
 
-import ledski.askbot.parser.GrammarRule;
+import ledski.askbot.parser.SyntaxRule;
 import ledski.askbot.parser.SyntaxManager;
-import ledski.askbot.parser.CompilerExceptions.*;
+import ledski.askbot.parser.SyntaxExceptions.*;
 
 /** 
  * Regra:
  * QUESTAO -> Questao  qVar  :  String  ARRAY_RESPOSTA
  */
-public class Questao extends GrammarRule {
+public class Questao extends SyntaxRule {
 
 	public String questao;
 	public String variavel;

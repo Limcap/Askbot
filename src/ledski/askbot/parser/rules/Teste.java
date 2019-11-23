@@ -1,13 +1,13 @@
 package ledski.askbot.parser.rules;
 
 import static ledski.askbot.lexer.Token.TokenType.*;
-import ledski.askbot.parser.GrammarRule;
+import ledski.askbot.parser.SyntaxRule;
 import ledski.askbot.parser.SyntaxManager;
-import ledski.askbot.parser.CompilerExceptions.*;
+import ledski.askbot.parser.SyntaxExceptions.*;
 
 /** TESTE -> Teste  tVar  :  String  CONDICAO
  */
-public class Teste extends GrammarRule {
+public class Teste extends SyntaxRule {
 
 	public String variavel;
 	public String texto;

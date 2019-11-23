@@ -3,7 +3,7 @@ package ledski.askbot.parser;
 import java.util.List;
 
 import ledski.askbot.lexer.Token;
-import ledski.askbot.parser.CompilerExceptions.*;
+import ledski.askbot.parser.SyntaxExceptions.*;
 import ledski.askbot.parser.rules.Especialidade;
 import ledski.askbot.parser.rules.ListaDeQuestoes;
 import ledski.askbot.parser.rules.ListaDeTestes;
@@ -16,7 +16,7 @@ public class SyntaxTree {
 	public List<Questao> listaDeQuestoes;
 	public List<Teste> listaDeTestes;
 
-	public SyntaxTree( List<Token> tokenList ) throws Exception, NotAToken, UnexpectedToken, UnfinishedCode {
+	public SyntaxTree( List<Token> tokenList ) throws Exception {
 		
 		SyntaxManager.setTokenList( tokenList );
 		SyntaxManager sm = new SyntaxManager();

@@ -2,9 +2,9 @@ package ledski.askbot;
 
 import java.util.List;
 
-import ledski.askbot.parser.CompilerExceptions.NotAToken;
-import ledski.askbot.parser.CompilerExceptions.UnfinishedCode;
-import ledski.askbot.parser.CompilerExceptions.UnexpectedToken;
+import ledski.askbot.parser.SyntaxExceptions.NotAToken;
+import ledski.askbot.parser.SyntaxExceptions.UnfinishedCode;
+import ledski.askbot.parser.SyntaxExceptions.UnexpectedToken;
 import ledski.askbot.parser.SyntaxTree;
 import ledski.askbot.lexer.Automato;
 import ledski.askbot.lexer.ConflictingTransitionException;

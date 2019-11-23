@@ -3,8 +3,8 @@ package ledski.askbot.parser.rules;
 import java.util.ArrayList;
 import java.util.List;
 
-import ledski.askbot.parser.CompilerExceptions.UnexpectedToken;
-import ledski.askbot.parser.GrammarRule;
+import ledski.askbot.parser.SyntaxExceptions.UnexpectedToken;
+import ledski.askbot.parser.SyntaxRule;
 import ledski.askbot.parser.SyntaxManager;
 
 /**
@@ -12,7 +12,7 @@ import ledski.askbot.parser.SyntaxManager;
  * LISTA_DE_TESTES -> TESTE  LISTA_DE_TESTES | vazio
  * @author Leandro Ledski
  */
-public class ListaDeTestes extends GrammarRule {
+public class ListaDeTestes extends SyntaxRule {
 	
 	public List<Teste> listaDeTestes;
 

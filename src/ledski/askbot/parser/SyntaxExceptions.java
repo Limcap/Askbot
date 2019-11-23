@@ -2,7 +2,7 @@ package ledski.askbot.parser;
 
 import ledski.askbot.lexer.Token;
 
-public abstract class CompilerExceptions {
+public abstract class SyntaxExceptions {
 	
 	@SuppressWarnings("serial")
 	public static class UnexpectedToken extends Exception {

@@ -3,9 +3,9 @@ package ledski.askbot.parser.rules;
 import java.util.ArrayList;
 import java.util.List;
 
-import ledski.askbot.parser.GrammarRule;
+import ledski.askbot.parser.SyntaxRule;
 import ledski.askbot.parser.SyntaxManager;
-import ledski.askbot.parser.CompilerExceptions.*;
+import ledski.askbot.parser.SyntaxExceptions.*;
 
 /**
  * Regra:
@@ -13,7 +13,7 @@ import ledski.askbot.parser.CompilerExceptions.*;
  * @author Leandro
  *
  */
-public class ListaDeQuestoes extends GrammarRule {
+public class ListaDeQuestoes extends SyntaxRule {
 	
 	public List<Questao> listaDeQuestoes;
 	
