@@ -33,7 +33,6 @@ public class Questao extends GrammarRule {
 			tipoDeArray = ar.tipoDeArray;
 		}
 		catch ( UnexpectedToken e ) {
-			System.out.println( "Questão não encontrada" );
 			sm.resetRulePointer();
 			sm.rethrowSavedExceptionFromCatchBlock();
 		}

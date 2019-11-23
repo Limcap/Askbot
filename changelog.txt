@@ -1,3 +1,11 @@
+Antes a regra Inicio foi mesclada com a Especialidade. Porém para melhor clareza de código e
+coerência com a grammar-rules.txt a regra Especialidade agora é uma regra normal que extends
+GrammarRule, e a Regra início passou a ser a classe SyntaxTree, que não extende GrammarRule.
+
+================================================================================
+ANTERIOR
+================================================================================
+
 PROBLEMA:
 Sistema de Exceptions em regras opcionais (que podem ser 'vazias'). O método getNextToken
 do SystaxManager (antes chamado de TokenizedCodeManager) é o método que emite erros caso não
