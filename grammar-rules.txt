@@ -12,22 +12,16 @@
 	/** QUESTAO -> Questao  qVar  :  String  ARRAY
 	 */
 	
-	/** ARRAY -> [  RANGE  ]  |  [  ITEMS  ]
-	 */
-	
-	/** RANGE -> NUMERO - NUMERO
+	/** ARRAY -> [  NUMERO - NUMERO  ]  |  [  ITEM  ITEM_ADICIONAL  ] |  [  ]
 	 */
 	
 	/** NUMERO -> Inteiro | Decimal
 	 */
 	
-	/** ITEMS -> ITEM  OBJETO_ADICIONAL
-	 */
-	
 	/** ITEM -> NUMERO | STRING
 	 */
 	
-	/** ITEM_ADICIONAL -> , OBJETO | vazio
+	/** ITEM_ADICIONAL -> , ITEM  ITEM_ADICIONAL | vazio
 	 */
 	
 	/** LISTA_DE_TESTES -> TESTE  LISTA_DE_TESTES | vazio
