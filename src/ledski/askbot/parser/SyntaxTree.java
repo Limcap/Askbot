@@ -3,7 +3,6 @@ package ledski.askbot.parser;
 import java.util.List;
 
 import ledski.askbot.lexer.Token;
-import ledski.askbot.parser.SyntaxExceptions.*;
 import ledski.askbot.parser.rules.Especialidade;
 import ledski.askbot.parser.rules.ListaDeQuestoes;
 import ledski.askbot.parser.rules.ListaDeTestes;

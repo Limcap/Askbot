@@ -28,7 +28,7 @@ public class Main {
 //		a2.mostrarCaminhosNoConsole();
 //		a2.mostrarEstadosNoConsole();
 		
-		String input = "Especialidade: \"Teste\" \"Só para testar\" Questao q1: \"ola\" {} Questao q2: \"Segunda Questao\" {10-20} Teste t1: \"Teste1\" Teste t2: \"Mais um teste\"";
+		
 		List<String> lines = Files.readAllLines( Paths.get("codigo.ask"), StandardCharsets.UTF_8 );
 		List<Token> tokenList = new ArrayList<Token>();
 		for( String line : lines ) {
@@ -38,16 +38,19 @@ public class Main {
 			if( temp.size() > 0 && temp.get( temp.size()-1 ).type == TokenType._error ) break;
 		}
 		
+		
 		for( Token t : tokenList ) {
 			System.out.println( t );
 		}
+		
 		
 		System.out.println( "\n\nTOKENS ENCONTRADOS:" );
 		Gridder gr = new Gridder();
 		tokenList.forEach( t -> gr.append( t.toGridder() ) );
 		System.out.println( gr.publish() );
 		
-		// GRAMATICA
+		
+		// PARSER
 		SyntaxTree tree = new SyntaxTree( tokenList );
 	}
 	

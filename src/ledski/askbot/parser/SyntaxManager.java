@@ -93,7 +93,7 @@ public class SyntaxManager {
 	
 	
 	public void throwSavedExceptionAtTheEndOfStartRule() throws Exception {
-		if( pointer2 <= savedExceptionIndexOfToken )
+		if( pointer2 < savedExceptionIndexOfToken )
 			throw savedException;
 	}
 	

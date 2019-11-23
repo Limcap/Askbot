@@ -21,7 +21,7 @@ public class ItemsAdicionais extends SyntaxRule {
 			itemsAdicionais = new ArrayList<Item>();
 			itemsAdicionais.add( new Item() );
 			itemsAdicionais.addAll( new ItemsAdicionais().itemsAdicionais );
-		} catch( UnexpectedToken e ) {
+		} catch( UnexpectedToken | UnfinishedCode e ) {
 			sm.resetRulePointer();
 		}
 		

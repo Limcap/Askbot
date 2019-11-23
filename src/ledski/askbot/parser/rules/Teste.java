@@ -19,11 +19,8 @@ public class Teste extends SyntaxRule {
 		
 		try {
 			sm.getNextToken( _Teste );
-			
 			variavel = sm.getNextToken( _tVar ).lexema;
-			
 			sm.getNextToken( _doisPontos );
-			
 			sm.getNextToken( _String );
 //			condicao = new Condicao( code );
 		}

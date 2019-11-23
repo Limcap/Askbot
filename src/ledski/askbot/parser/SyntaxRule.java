@@ -9,7 +9,7 @@ public abstract class SyntaxRule {
 //	public GrammarRule( List<Token> tokenList, int startIndex ) {}
 	public SyntaxRule() {
 		System.out.println( "\n" + Thread.currentThread().getStackTrace()[2].getClassName().substring( 21 ) );
-		System.out.println( "stacklevel " + Thread.currentThread().getStackTrace().length );
+//		System.out.println( "stacklevel " + Thread.currentThread().getStackTrace().length );
 	}
 
 

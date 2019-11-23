@@ -27,7 +27,7 @@ public class ListaDeQuestoes extends SyntaxRule {
 			listaDeQuestoes.add( new Questao() );
 			listaDeQuestoes.addAll( new ListaDeQuestoes().listaDeQuestoes );
 		}
-		catch( UnexpectedToken e ) {
+		catch( UnexpectedToken | UnfinishedCode e ) {
 			sm.resetRulePointer();
 		}
 		

@@ -1,7 +1,39 @@
+As regras opcionais terão que capturar também a exceção UnfinishedCode pois:
+Considere que a última regra da regra inicial é uma regra obrigatória, como Teste. Caso a regra
+falhe, por dois motivos: nao encontrou o token que queria, ou o indice de inicio da regra já é
+1 a mais do que o final da lista de tokens. Se for o 1o caso, o erro emitido será o de token nao
+reconhecido, porem se for o segundo caso vai emitir a exceção Unfinished code, que está correto pois
+a regra é obrigatória.
+
+Agora considere que a regra final é opcional em vez de obrigatória, como a ListaDeTeste. Nesse caso
+dentro dessa regra, será chamada a subregra obrigatória 'Teste', e se ela falhar nas mesmas
+condições do exemplo anteror, teremos um problema, pq se ela falhar pelo segundo motivo, a exceção
+emitida 'UnfinishedCode' estará errada pois a regra é opcional. Anteriormente, a exceção
+UnfinishedCode não era capturada pelo bloco catch das regras pois como indica o fim da lista de
+tokens, deve ser emitida imediatamente, ao oposta da exceção UnexpectedToken. Porém analisando isso
+melhor ela na verdade só deve ser emitida imediatamente pelas regras obrigatórias, e capturadas
+pelas opcionais.
+
+Ok, então com a exceção sendo capturada pelas regras opcionais, cosidere este último caso:
+A última regra é opcional e o código foi deixado inacabado, por exemplo, se a regra é ListaDeTeste
+e o código terminou com um teste escrito parcialmente.
+Nesse caso, a subregra Teste vai falhar, RETORNAR O POINTER PARA UMA POSIÇÃO ANTERIOR AO último
+TOKEN e emitir a exceção UnfinishedCode, o que está certo. Porém como está dentro de uma
+regra opcional esse erro será capturado.
+O que vai fazer essa situação dar certo é o fato do pointer estar antes do fim e o comando
+sm.throwSavedExceptionAtTheEndOfStartRule()
+que deve ser chamado no final da regra principal. Como a exceção terá sido salva, e como a condição
+para esse método emitir uma exceção salva é de que o pointer esteja anterior ao index da exceção
+salva, então a exceção será finalmente emitida.
+
+================================================================================
+ANTERIOR VVV
+================================================================================
+
 Substituido o token _chave1 e _chave2 por _colchete1 e _colchete2.
 Na difinição dos path de transição foi necessário voltar a fazer o split no caractere " " (espaço)
 sem os lookaheads pq os paths "] []" e : "[ []" não estava sendo splitted.
- 
+
 ================================================================================
 ANTERIOR
 ================================================================================
