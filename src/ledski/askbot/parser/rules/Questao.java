@@ -29,7 +29,7 @@ public class Questao extends SyntaxRule {
 			sm.getNextToken( _doisPontos );
 			questao = sm.getNextToken( _String ).lexema;
 		
-			ArrayResposta ar = new ArrayResposta();
+			Array ar = new Array();
 			tipoDeArray = ar.tipoDeArray;
 		}
 		catch ( UnexpectedToken e ) {

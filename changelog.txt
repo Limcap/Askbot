@@ -1,3 +1,24 @@
+Todas as classes de regras foram criadas, porem ainda nao estao com o conteúdo certo.
+
+Várias Regras alteradas
+-ITEM agora chama PRIMITIVO
+-NUMERO nao existe mais, em vez disso os Token do tipo _Inteiro e _Decimal foram unidos em um único
+token _Numero
+-Regras de condicao e comparação foram melhor estruturadas.
+-token tipo _diferente foi criado.
+
+As diferenças podem ser vistas no arquivo grammar-rules.txt
+
+OBS:
+Para que o token _Numero possa funcionar como _Inteiro e _Decimal, será necessário modificar a forma
+como os 'path's de transição são interpretados. pois será necessário colocar 2 path's que retornem
+o token _Numero. Portanto o mapa de path nao poderá ser mais um mapa. devera ser um Object[];
+Será feito num proximo commit
+
+================================================================================
+ANTERIOR VVV
+================================================================================
+
 As regras opcionais terão que capturar também a exceção UnfinishedCode pois:
 Considere que a última regra da regra inicial é uma regra obrigatória, como Teste. Caso a regra
 falhe, por dois motivos: nao encontrou o token que queria, ou o indice de inicio da regra já é

@@ -16,15 +16,15 @@ import ledski.askbot.parser.SyntaxManager;
  * ARRAY_RESPOSTA -> [  NUMERO - NUMERO  ]  |  [  LISTA_DE_ITEM  ] |  [  ]
  * @author Leandro Ledski
  */
-public class ArrayResposta extends SyntaxRule {
+public class Array extends SyntaxRule {
 
 	public byte tipoDeArray;
 	public Double min;
 	public Double max;
 	public boolean isDecimal;
-	public List<Item> listaDeItems;
+	public List<Primitivo> listaDeItems;
 	
-	public ArrayResposta() throws Exception {
+	public Array() throws Exception {
 		SyntaxManager sm = new SyntaxManager();
 		
 		
@@ -43,9 +43,9 @@ public class ArrayResposta extends SyntaxRule {
 		// conteudo de array de range
 		try {
 			sm.getNextToken( _colchete1 );
-			min = Double.valueOf( sm.getNextToken( _Inteiro ).lexema );
+			min = Double.valueOf( sm.getNextToken( _Numero ).lexema );
 			sm.getNextToken( _menos );
-			max = Double.valueOf( sm.getNextToken( _Inteiro ).lexema );
+			max = Double.valueOf( sm.getNextToken( _Numero ).lexema );
 			sm.getNextToken( _colchete2 );
 		}
 		catch ( UnexpectedToken e ) {
@@ -57,9 +57,9 @@ public class ArrayResposta extends SyntaxRule {
 		// conteudo de array de items
 		if( sm.noSuccessYet() ) try {
 			sm.getNextToken( _colchete1 );
-			listaDeItems = new ArrayList<Item>();
-			listaDeItems.add( new Item() );
-			listaDeItems.addAll( new ItemsAdicionais().itemsAdicionais );
+			listaDeItems = new ArrayList<Primitivo>();
+			listaDeItems.add( new Primitivo() );
+			listaDeItems.addAll( new PrimitivoAdicional().itemsAdicionais );
 			sm.getNextToken( _colchete2 );
 		}
 		catch ( UnexpectedToken e ) {

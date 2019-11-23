@@ -11,16 +11,13 @@
 	/** QUESTAO -> Questao  qVar  :  String  ARRAY
 	 */
 	
-	/** ARRAY -> [  NUMERO - NUMERO  ]  |  [  ITEM  ITEM_ADICIONAL  ] |  [  ]
+	/** ARRAY -> [  Numero - Numero  ]  |  [  PRIMITIVO  PRIMITIVO_ADICIONAL  ] |  [  ]
 	 */
 	
-	/** NUMERO -> Inteiro | Decimal
+	/** PRIMITIVO -> Numero | String
 	 */
 	
-	/** ITEM -> NUMERO | STRING
-	 */
-	
-	/** ITEM_ADICIONAL -> , ITEM  ITEM_ADICIONAL | vazio
+	/** PRIMITIVO_ADICIONAL -> , PRIMITIVO  PRIMITIVO_ADICIONAL | vazio
 	 */
 	
 	/** LISTA_DE_TESTES -> TESTE  LISTA_DE_TESTES | vazio
@@ -29,19 +26,19 @@
 	/** TESTE -> Teste  tVar  :  String  CONDICAO
 	 */
 	
-	/** CONDICAO -> Se  COMPARACAO_COMPOSTA  Entao  String  Senao  String
+	/** CONDICAO -> Se  LISTA_DE_COMPARACOES  Entao  String  Senao  String
 	 */
 	
-	/** COMPARACAO_COMPOSTA -> COMPARACAO  COMPARACAO_ADICIONAL
+	/** LISTA_DE_COMPARACOES -> COMPARACAO1  COMPARACAO2
 	 */
 	
-	/** COMPARACAO -> TERMO  OP_COMPARACAO  TERMO
+	/** COMPARACAO1 -> TERMO  OP_COMPARACAO  TERMO
 	 */
 	
-	/** COMPARACAO_ADICIONAL -> OP_LOGICO  COMPARACAO | vazio
+	/** COMPARACAO2 -> OP_LOGICO  COMPARACAO1 | vazio
 	 */
 	
-	/** TERMO -> gVar | tVar | String | Inteiro | Decimal
+	/** TERMO -> qVar | PRIMITIVO
 	 */
 	
 	/** OP_COMPARACAO -> ==  |  >  |  >=  |  <  |  <=  |  != 

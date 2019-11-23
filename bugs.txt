@@ -1,3 +1,7 @@
+BUG: Novo token tipo _Numero é incompatível com o mapa de path de transições.
+
+====================================================================================================
+
 Bug: Erro de UnfinishedCode em index anterior ao final do arquivo.
 Causado por: Como o Lexer (Autômato) não interrompe a execução do compilador quando detecta um token
 do tipo _erro, a execução continua para o Parser. O problema ocorre quando o token tipo _erro

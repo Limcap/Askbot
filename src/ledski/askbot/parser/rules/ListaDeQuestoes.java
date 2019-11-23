@@ -20,6 +20,7 @@ public class ListaDeQuestoes extends SyntaxRule {
 	public ListaDeQuestoes() throws Exception { // UnfinishedCode, NotAToken
 		SyntaxManager sm = new SyntaxManager();
 		
+		
 		listaDeQuestoes = new ArrayList<Questao>();
 		// Como a regra pode ser vazia, exceções de token são ignoradas e o ponteiro de tokens do
 		// tekenizedCodeManager é reposicionado para o índice onde estava no início da regra.
@@ -30,6 +31,7 @@ public class ListaDeQuestoes extends SyntaxRule {
 		catch( UnexpectedToken | UnfinishedCode e ) {
 			sm.resetRulePointer();
 		}
+		
 		
 	}
 	
