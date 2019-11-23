@@ -19,7 +19,7 @@ public class Questao extends GrammarRule {
 	public Range range;
 	
 	
-	public Questao( TokenizedCodeManager code ) throws UnexpectedToken, NonExistentToken, UnexpectedEndOfCode {
+	public Questao( TokenizedCodeManager code ) throws UnexpectedToken, NotAToken, UnfinishedCode {
 		super( code );
 
 		try {

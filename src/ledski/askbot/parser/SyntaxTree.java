@@ -10,7 +10,7 @@ public class SyntaxTree {
 	
 	public Especialidade inicio;
 
-	public SyntaxTree( List<Token> tokenList ) throws NonExistentToken, UnexpectedToken, UnexpectedEndOfCode {
+	public SyntaxTree( List<Token> tokenList ) throws NotAToken, UnexpectedToken, UnfinishedCode {
 		
 		TokenizedCodeManager.setTokenList( tokenList );
 		

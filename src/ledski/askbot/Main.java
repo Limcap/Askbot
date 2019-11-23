@@ -2,8 +2,8 @@ package ledski.askbot;
 
 import java.util.List;
 
-import ledski.askbot.parser.CompilerExceptions.NonExistentToken;
-import ledski.askbot.parser.CompilerExceptions.UnexpectedEndOfCode;
+import ledski.askbot.parser.CompilerExceptions.NotAToken;
+import ledski.askbot.parser.CompilerExceptions.UnfinishedCode;
 import ledski.askbot.parser.CompilerExceptions.UnexpectedToken;
 import ledski.askbot.parser.SyntaxTree;
 import ledski.askbot.lexer.Automato;
@@ -17,7 +17,7 @@ import ledski.util.Gridder;
 public class Main {
 	
 	
-	public static void main(String[] args) throws ConflictingTransitionException, NonExistentToken, UnexpectedToken, UnexpectedEndOfCode {
+	public static void main(String[] args) throws ConflictingTransitionException, NotAToken, UnexpectedToken, UnfinishedCode {
 		Automato a2 = new Automato();
 		a2.verboseLevel012 = 2;
 		a2.mostrarCaminhosNoConsole();

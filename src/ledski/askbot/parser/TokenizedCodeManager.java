@@ -4,8 +4,8 @@ import java.util.List;
 
 import ledski.askbot.lexer.Token;
 import ledski.askbot.lexer.Token.TokenType;
-import ledski.askbot.parser.CompilerExceptions.NonExistentToken;
-import ledski.askbot.parser.CompilerExceptions.UnexpectedEndOfCode;
+import ledski.askbot.parser.CompilerExceptions.NotAToken;
+import ledski.askbot.parser.CompilerExceptions.UnfinishedCode;
 import ledski.askbot.parser.CompilerExceptions.UnexpectedToken;
 
 /**
@@ -38,14 +38,14 @@ public class TokenizedCodeManager {
 	
 	
 	
-	public Token getNextToken( TokenType type ) throws UnexpectedToken, NonExistentToken, UnexpectedEndOfCode {
+	public Token getNextToken( TokenType type ) throws UnexpectedToken, NotAToken, UnfinishedCode {
 		if( pointer2 > tokenList.size()-1 ) {
-			throw new CompilerExceptions.UnexpectedEndOfCode("");
+			throw new CompilerExceptions.UnfinishedCode("");
 		}
 		Token t = tokenList.get( pointer2++ );
 		if( t.type == TokenType._error ) {
 			String msg = "\n" + t.toString() + "\nINDEX: " + pointer2;
-			throw new CompilerExceptions.NonExistentToken( msg );
+			throw new CompilerExceptions.NotAToken( msg );
 		}
 		else if( t.type != type ) {
 			String msg = "\n" + t.toString() + "\nINDEX: " + pointer2;

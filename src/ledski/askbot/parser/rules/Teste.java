@@ -14,7 +14,7 @@ public class Teste extends GrammarRule {
 //	public Condicao condicao;
 	
 	
-	public Teste( TokenizedCodeManager code ) throws UnexpectedToken, NonExistentToken, UnexpectedEndOfCode {
+	public Teste( TokenizedCodeManager code ) throws UnexpectedToken, NotAToken, UnfinishedCode {
 		super( code );
 		
 		try {

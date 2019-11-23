@@ -10,15 +10,15 @@ public abstract class CompilerExceptions {
 	}
 	
 	@SuppressWarnings("serial")
-	public static class NonExistentToken extends Exception {
-		public NonExistentToken( String message ) {
+	public static class NotAToken extends Exception {
+		public NotAToken( String message ) {
 			super( message );
 		}
 	}
 	
 	@SuppressWarnings("serial")
-	public static class UnexpectedEndOfCode extends Exception {
-		public UnexpectedEndOfCode( String message )  {
+	public static class UnfinishedCode extends Exception {
+		public UnfinishedCode( String message )  {
 			super( message );
 		}
 	}

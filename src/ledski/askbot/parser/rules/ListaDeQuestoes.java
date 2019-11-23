@@ -17,7 +17,7 @@ public class ListaDeQuestoes extends GrammarRule {
 	
 	public List<Questao> listaDeQuestoes;
 	
-	public ListaDeQuestoes( TokenizedCodeManager code ) throws UnexpectedEndOfCode, NonExistentToken {
+	public ListaDeQuestoes( TokenizedCodeManager code ) throws UnfinishedCode, NotAToken {
 		super( code );
 		listaDeQuestoes = new ArrayList<Questao>();
 	

@@ -19,7 +19,7 @@ public class Especialidade extends GrammarRule {
 	public List<Questao> listaDeQuestoes;
 	public List<Teste> listaDeTestes;
 	
-	public Especialidade( TokenizedCodeManager code ) throws NonExistentToken, UnexpectedToken, UnexpectedEndOfCode {
+	public Especialidade( TokenizedCodeManager code ) throws NotAToken, UnexpectedToken, UnfinishedCode {
 		super( code );
 		
 		code.getNextToken( _Especialidade );
