@@ -20,6 +20,7 @@ import ledski.askbot.parser.CompilerExceptions.UnexpectedToken;
 public class TokenizedCodeManager {
 	
 	private static List<Token> tokenList;
+	private static int pointer2 = 0;
 
 	public static void setTokenList( List<Token> t ) {
 		tokenList = t;
@@ -27,45 +28,49 @@ public class TokenizedCodeManager {
 	
 	
 	
-	public TokenizedCodeManager( int pointer ) {
-//		this.tokenList = tokenList;
-		this.pointer = pointer;
-		this.startIndex = pointer;
+	public TokenizedCodeManager( int startIndex ) {
+		this.startIndex = startIndex;
 	}
 	
 	
 	
 	private final int startIndex;
-	private int pointer;
 	
 	
 	
 	public Token getNextToken( TokenType type ) throws UnexpectedToken, NonExistentToken, UnexpectedEndOfCode {
-		if( pointer > tokenList.size()-1 ) {
+		if( pointer2 > tokenList.size()-1 ) {
 			throw new CompilerExceptions.UnexpectedEndOfCode("");
 		}
-		Token t = tokenList.get( pointer++ );
+		Token t = tokenList.get( pointer2++ );
 		if( t.type == TokenType._error ) {
-			String msg = "\n" + t.toString() + "\nINDEX: " + pointer;
+			String msg = "\n" + t.toString() + "\nINDEX: " + pointer2;
 			throw new CompilerExceptions.NonExistentToken( msg );
 		}
 		else if( t.type != type ) {
-			String msg = "\n" + t.toString() + "\nINDEX: " + pointer;
+			String msg = "\n" + t.toString() + "\nINDEX: " + pointer2;
 			throw new CompilerExceptions.UnexpectedToken( msg );
 		}
+		System.out.println( pointer2 + " " + t.type + " " + t.lexema );
 		return t;
 	}
 	
 	
 	
-	public TokenizedCodeManager advanceStartIndex() {
-		return new TokenizedCodeManager( pointer );
+	public boolean noSuccessYet() {
+		return pointer2 == startIndex;
 	}
 	
 	
 	
 	public void resetRulePointer() {
-		this.pointer = startIndex;
+		resetRulePointer(0);
+	}
+	
+	
+	
+	public void resetRulePointer( int offset ) {
+		pointer2 = this.startIndex + offset;
 	}
 	
 	

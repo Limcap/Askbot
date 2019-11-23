@@ -17,10 +17,20 @@ public class Teste extends GrammarRule {
 	public Teste( TokenizedCodeManager code ) throws UnexpectedToken, NonExistentToken, UnexpectedEndOfCode {
 		super( code );
 		
-		code.getNextToken( _Teste );
-		variavel = code.getNextToken( _tVar ).lexema;
-		code.getNextToken( _doisPontos );
-//		condicao = new Condicao( code );
+		try {
+			code.getNextToken( _Teste );
+			
+			variavel = code.getNextToken( _tVar ).lexema;
+			
+			code.getNextToken( _doisPontos );
+			
+			code.getNextToken( _String );
+//			condicao = new Condicao( code );
+		}
+		catch( UnexpectedToken e ) {
+			code.resetRulePointer();
+			throw e;
+		}
 		
 	}
 

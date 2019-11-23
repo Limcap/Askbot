@@ -17,7 +17,7 @@ public class ListaDeQuestoes extends GrammarRule {
 	
 	public List<Questao> listaDeQuestoes;
 	
-	public ListaDeQuestoes( TokenizedCodeManager code ) throws UnexpectedEndOfCode {
+	public ListaDeQuestoes( TokenizedCodeManager code ) throws UnexpectedEndOfCode, NonExistentToken {
 		super( code );
 		listaDeQuestoes = new ArrayList<Questao>();
 	
@@ -27,10 +27,9 @@ public class ListaDeQuestoes extends GrammarRule {
 			listaDeQuestoes.add( new Questao( code ) );
 			listaDeQuestoes.addAll( new ListaDeQuestoes( code ).listaDeQuestoes );
 		}
-		catch( UnexpectedToken | NonExistentToken e ) {
+		catch( UnexpectedToken e ) {
 			code.resetRulePointer();
 		}
-	
 
 	}
 

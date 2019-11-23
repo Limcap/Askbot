@@ -8,8 +8,8 @@ public abstract class GrammarRule {
 	
 //	public GrammarRule( List<Token> tokenList, int startIndex ) {}
 	public GrammarRule( TokenizedCodeManager code ) {
-		code = code.advanceStartIndex();
-		System.out.println( Thread.currentThread().getStackTrace()[2].getClassName().substring( 21 ) );
+//		code = code.advanceStartIndex();
+		System.out.println( "\n" + Thread.currentThread().getStackTrace()[2].getClassName().substring( 21 ) );
 	}
 
 

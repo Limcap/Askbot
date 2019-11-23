@@ -18,14 +18,14 @@ public class ListaDeTestes extends GrammarRule {
 	
 	public List<Teste> listaDeTestes;
 
-	public ListaDeTestes( TokenizedCodeManager code ) throws UnexpectedEndOfCode {
+	public ListaDeTestes( TokenizedCodeManager code ) throws UnexpectedEndOfCode, NonExistentToken {
 		super( code );
 		
 		listaDeTestes = new ArrayList<Teste>();
 		try {
 			listaDeTestes.add( new Teste( code ) );
 			listaDeTestes.addAll( new ListaDeTestes( code ).listaDeTestes );
-		} catch( UnexpectedToken | NonExistentToken e ) {
+		} catch( UnexpectedToken e ) {
 			code.resetRulePointer();
 		}
 	}

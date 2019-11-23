@@ -8,25 +8,35 @@ import ledski.askbot.parser.CompilerExceptions.*;
 
 /** 
  * Regra:
- * QUESTAO -> Questao  qVar  :  String  ARRAY
+ * QUESTAO -> Questao  qVar  :  String  ARRAY_RESPOSTA
  */
 public class Questao extends GrammarRule {
 
 	public String questao;
 	public String variavel;
-	public String tipoDeArray;
-	public String[] array;
+	public byte tipoDeArray;
+	public String[] items;
+	public Range range;
 	
 	
 	public Questao( TokenizedCodeManager code ) throws UnexpectedToken, NonExistentToken, UnexpectedEndOfCode {
 		super( code );
+
+		try {
+			code.getNextToken( _Questao );
+
+			variavel = code.getNextToken( _qVar ).lexema;
+			code.getNextToken( _doisPontos );
+			questao = code.getNextToken( _String ).lexema;
 		
-		code.getNextToken( _Questao );
-		
-		variavel = code.getNextToken( _qVar ).lexema;
-		code.getNextToken( _doisPontos );
-		questao = code.getNextToken( _String ).lexema;
-		
+			ArrayResposta ar = new ArrayResposta( code );
+			tipoDeArray = ar.tipoDeArray;
+		}
+		catch ( UnexpectedToken e ) {
+			System.out.println( "Questão não encontrada" );
+			code.resetRulePointer();
+			throw e;
+		}
 	}
 
 }
