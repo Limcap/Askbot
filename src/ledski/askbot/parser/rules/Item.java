@@ -12,10 +12,15 @@ public class Item extends SyntaxRule {
 
 	public String item;
 	
-	public Item() throws UnexpectedToken, NotAToken, UnfinishedCode {
+	public Item() throws Exception {
 		SyntaxManager sm = new SyntaxManager();
-		
-		item = sm.getNextToken( _String ).lexema;
+		try {
+			item = sm.getNextToken( _String ).lexema;
+		}
+		catch ( UnexpectedToken e ) {
+			sm.resetRulePointer();
+			sm.rethrowSavedExceptionFromCatchBlock();
+		}
 	}
 
 }
