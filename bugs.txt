@@ -1,0 +1,10 @@
+Bug: Erro de UnfinishedCode em index anterior ao final do arquivo.
+Causado por: Como o Lexer (Autômato) não interrompe a execução do compilador quando detecta um token
+do tipo _erro, a execução continua para o Parser. O problema ocorre quando o token tipo _erro
+retornado pelo automato não é incluído na lista de tokens que vai para o Parser. Como o Autômato
+interrompe o reconhecimento de tokens quando acha um _erro, a lista de tokens não possui todas os
+caracteres do código original, dessa forma quando o Parser chega ao final da lista de token, ele
+vai emitir um erro de UnfinishedCode, pois não vai ter o token de _error.
+O token de _erro deve ser sempre inlcluído na lista de tokens que vai pro parser.
+Mas a correção ideal seria interromper a execução do compilador antes de ir pro parser quando um
+token _error for encontrado.
