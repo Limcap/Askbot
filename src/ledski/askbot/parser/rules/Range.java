@@ -2,29 +2,32 @@ package ledski.askbot.parser.rules;
 
 import static ledski.askbot.lexer.Token.TokenType.*;
 import ledski.askbot.parser.SyntaxExceptions.*;
-import ledski.askbot.lexer.Token.TokenType;
 import ledski.askbot.parser.SyntaxRule;
 import ledski.askbot.parser.SyntaxManager;
 
 /**
  * Regra:
- * OP_COMPARACAO  ->  ==  |  >  |  >=  |  <  |  <=  |  != 
+ * RANGE  ->  Numero  -  Numero
  * @author Leandro Ledski
+ *
  */
-public class OpComparacao extends SyntaxRule {
+public class Range extends SyntaxRule {
 	
 	
-	public TokenType type;
+	public Double min;
+	public Double max;
 	
 	
-	public OpComparacao() throws Exception {
+	public Range() throws Exception {
 		SyntaxManager sm = new SyntaxManager();
 		
 		
-		if( sm.noSuccessYet() ) try {
-			type = sm.getNextToken( _igualIgual, _diferente, _maior, _maiorIgual, _menor, _menorIgual ).type;
+		try {
+			min = Double.valueOf( sm.getNextToken( _Numero ).lexema );
+			sm.getNextToken( _menos );
+			max = Double.valueOf( sm.getNextToken( _Numero ).lexema );
 		}
-		catch ( UnexpectedToken e ) {
+		catch( UnexpectedToken | UnfinishedCode e ) {
 			sm.resetRulePointer();
 			sm.rethrowFromCatchBlockOfEnforcedRules();
 		}

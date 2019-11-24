@@ -1,25 +1,24 @@
 package ledski.askbot.parser.rules;
 
-import static ledski.askbot.lexer.Token.TokenType.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import ledski.askbot.parser.SyntaxExceptions.UnexpectedToken;
-import ledski.askbot.parser.SyntaxExceptions.UnfinishedCode;
-import ledski.askbot.parser.util.PairIfThen;
-import ledski.askbot.parser.SyntaxRule;
+import ledski.askbot.parser.SyntaxExceptions.*;
+import static ledski.askbot.lexer.Token.TokenType.*;
 import ledski.askbot.parser.SyntaxManager;
+import ledski.askbot.parser.SyntaxRule;
 
 /**
  * Regra:
- * CONDICIONAL_OUSE -> OuSe CONDICIONAL_BASICO CONDICIONAL_OUSE | vazio
- * @author Leandro
+ * CONDICIONAL_OUSE  ->  OuSe CONDICIONAL_BASICO CONDICIONAL_OUSE  |  nada
+ * @author Leandro Ledski
  */
 public class CondicionalOuSe extends SyntaxRule {
-
-	public List<PairIfThen> lista = new ArrayList<PairIfThen>();
-
+	
+	
+	public List<CondicionalBasica> condicionaisBasicas = new ArrayList<CondicionalBasica>();
+	
+	
 	public CondicionalOuSe() throws Exception {
 		SyntaxManager sm = new SyntaxManager();
 		
@@ -37,10 +36,9 @@ public class CondicionalOuSe extends SyntaxRule {
 		 */
 		try {
 			sm.assertNextToken( _OuSe, _Senao );
-			
 			sm.getNextToken( _OuSe );
-			lista.add(  new CondicionalBasico().pairIfThen );
-			lista.addAll( new CondicionalOuSe().lista );
+			condicionaisBasicas.add(  new CondicionalBasica() );
+			condicionaisBasicas.addAll( new CondicionalOuSe().condicionaisBasicas );
 		}
 		catch ( UnexpectedToken | UnfinishedCode e ) {
 			sm.resetRulePointer();
@@ -48,5 +46,6 @@ public class CondicionalOuSe extends SyntaxRule {
 		
 		
 	}
-
+	
+	
 }

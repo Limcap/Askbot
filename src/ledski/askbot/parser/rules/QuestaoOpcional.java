@@ -3,9 +3,9 @@ package ledski.askbot.parser.rules;
 import java.util.ArrayList;
 import java.util.List;
 
+import ledski.askbot.parser.SyntaxExceptions.*;
 import ledski.askbot.parser.SyntaxRule;
 import ledski.askbot.parser.SyntaxManager;
-import ledski.askbot.parser.SyntaxExceptions.*;
 
 /**
  * Regra:
@@ -15,7 +15,9 @@ import ledski.askbot.parser.SyntaxExceptions.*;
  */
 public class QuestaoOpcional extends SyntaxRule {
 	
+	
 	public List<Questao> listaDeQuestoes;
+	
 	
 	public QuestaoOpcional() throws Exception { // UnfinishedCode, NotAToken
 		SyntaxManager sm = new SyntaxManager();
@@ -34,5 +36,6 @@ public class QuestaoOpcional extends SyntaxRule {
 		
 		
 	}
+	
 	
 }

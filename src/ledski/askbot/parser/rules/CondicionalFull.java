@@ -1,23 +1,24 @@
 package ledski.askbot.parser.rules;
 
-import static ledski.askbot.lexer.Token.TokenType.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import ledski.askbot.parser.SyntaxExceptions.UnexpectedToken;
-import ledski.askbot.parser.SyntaxRule;
-import ledski.askbot.parser.util.PairIfThen;
+import ledski.askbot.parser.SyntaxExceptions.*;
+import static ledski.askbot.lexer.Token.TokenType.*;
 import ledski.askbot.parser.SyntaxManager;
+import ledski.askbot.parser.SyntaxRule;
 
 /**
  * Regra:
- * CONDICIONAL_FULL -> Se  CONDICIONAL_BASICO  CONDICAO_OPCIONAL  Senao  PRIMITIVO
- * @author Leandro
+ * CONDICIONAL_FULL  ->  Se  CONDICIONAL_BASICO  CONDICIONAIS_OPCIONAIS  Senao  PRIMITIVO
+ * @author Leandro Ledski
  */
 public class CondicionalFull extends SyntaxRule {
-
-	public List<PairIfThen> lista = new ArrayList<PairIfThen>();
+	
+	
+	public List<CondicionalBasica> condicionaisBasicas = new ArrayList<CondicionalBasica>();
+	public Primitivo resultadoPadrao;
+	
 	
 	public CondicionalFull() throws Exception {
 		SyntaxManager sm = new SyntaxManager();
@@ -26,35 +27,20 @@ public class CondicionalFull extends SyntaxRule {
 		try {	
 			// Se...Entao
 			sm.getNextToken( _Se );
-			lista.add( new CondicionalBasico().pairIfThen );
+			condicionaisBasicas.add( new CondicionalBasica() );
 			// OuSe...Entao
-			lista.addAll( new CondicionalOuSe().lista );
+			condicionaisBasicas.addAll( new CondicionalOuSe().condicionaisBasicas );
 			// Senao
 			sm.getNextToken( _Senao );
-			lista.add( new PairIfThen( null, new Primitivo() ) );
-//			
-//			
-//			// Se...Entao
-//			sm.getNextToken( _Se );
-//			Condicao comparacao = new Condicao();
-//			sm.getNextToken( _Entao );
-//			Primitivo consequencia = new Primitivo();
-//			lista.add(  new PairIfThen( comparacao, consequencia ) );
-//			
-//			// OuSe...Entao
-//			lista.addAll( new CondicionalOuSe().lista );
-//			
-//			// Senao
-//			sm.getNextToken( _Senao );
-//			sm.getNextToken( _String, _Numero );
-			
-			
+			resultadoPadrao = new Primitivo();
 		}
 		catch ( UnexpectedToken e ) {
 			sm.resetRulePointer();
-			sm.rethrowSavedExceptionFromCatchBlock();
+			sm.rethrowFromCatchBlockOfEnforcedRules();
 		}
 		
+		
 	}
-
+	
+	
 }

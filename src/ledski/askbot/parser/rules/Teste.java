@@ -1,39 +1,47 @@
 package ledski.askbot.parser.rules;
 
-import static ledski.askbot.lexer.Token.TokenType._String;
-import static ledski.askbot.lexer.Token.TokenType._Teste;
-import static ledski.askbot.lexer.Token.TokenType._doisPontos;
-import static ledski.askbot.lexer.Token.TokenType._tVar;
+import java.util.ArrayList;
+import java.util.List;
 
-import ledski.askbot.parser.SyntaxExceptions.UnexpectedToken;
+import ledski.askbot.parser.SyntaxExceptions.*;
+import static ledski.askbot.lexer.Token.TokenType.*;
 import ledski.askbot.parser.SyntaxManager;
 import ledski.askbot.parser.SyntaxRule;
 
-/** TESTE -> Teste  tVar  :  String  LOGICA_DO_TESTE
+/** 
+ * Regra:
+ * TESTE  ->  Teste  tVar  :  String  CONDICIONAL_FULL
+ * @author Leandro Ledski
  */
 public class Teste extends SyntaxRule {
-
+	
+	
 	public String variavel;
-	public String texto;
-	public CondicionalFull condicional;
-//	public Condicao condicao;
+	public String textoInicial;
+	public List<CondicionalBasica> condicionais = new ArrayList<CondicionalBasica>();
+	public Primitivo resultadoPadrao;
 	
 	
-	public Teste() throws Exception { //UnexpectedToken, NotAToken, UnfinishedCode
+	public Teste() throws Exception {
 		SyntaxManager sm = new SyntaxManager();
 		
+		
 		try {
-			sm.getNextToken( _Teste );
-			variavel = sm.getNextToken( _tVar ).lexema;
-			sm.getNextToken( _doisPontos );
-			texto = sm.getNextToken( _String ).lexema;
-			condicional = new CondicionalFull();
+			sm.getNextToken( _Teste ); // Regra Teste
+			variavel = sm.getNextToken( _tVar ).lexema; // Regra tVar
+			sm.getNextToken( _doisPontos ); // Regra :
+			textoInicial = sm.getNextToken( _String ).lexema; // Regra String 
+			CondicionalFull cf = new CondicionalFull(); // Regra CONDICIONAL_FULL
+			condicionais.addAll( cf.condicionaisBasicas );
+			resultadoPadrao = cf.resultadoPadrao;
 		}
 		catch( UnexpectedToken e ) {
 			sm.resetRulePointer();
-			sm.rethrowSavedExceptionFromCatchBlock();
+			sm.rethrowFromCatchBlockOfEnforcedRules();
 		}
 		
+		
 	}
-
+	
+	
 }

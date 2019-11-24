@@ -1,13 +1,10 @@
 package ledski.askbot.parser;
 
-import java.util.Arrays;
 import java.util.List;
 
+import ledski.askbot.parser.SyntaxExceptions.*;
 import ledski.askbot.lexer.Token;
 import ledski.askbot.lexer.Token.TokenType;
-import ledski.askbot.parser.SyntaxExceptions.NotAToken;
-import ledski.askbot.parser.SyntaxExceptions.UnfinishedCode;
-import ledski.askbot.parser.SyntaxExceptions.UnexpectedToken;
 
 /**
  * Esta classe cria um objeto para gerenciar a manipulação dos tokens pelas regras da gramática.
@@ -35,6 +32,7 @@ public class SyntaxManager {
 	public SyntaxManager() {
 		this.startIndex = pointer2;
 	}
+	
 	
 	
 	private final int startIndex;
@@ -66,6 +64,7 @@ public class SyntaxManager {
 	}
 	
 	
+	
 	/**
 	 * Emite exceção se o próximo token nao for dos tipos informados.
 	 * Avança o pointer para que a exceção seja lançada corretamente.
@@ -74,6 +73,7 @@ public class SyntaxManager {
 	public void assertNextToken( TokenType ...types ) throws UnexpectedToken, NotAToken, UnfinishedCode {
 		if( !isNextToken( types ) ) getNextToken( types );
 	}
+	
 	
 	
 	/**
@@ -87,6 +87,7 @@ public class SyntaxManager {
 		for( TokenType ty : types ) if( ty == t.type ) return true;
 		return false;
 	}
+	
 	
 	
 	/**
@@ -115,7 +116,7 @@ public class SyntaxManager {
 	
 	
 	
-	public void rethrowSavedExceptionFromCatchBlock() throws Exception {
+	public void rethrowFromCatchBlockOfEnforcedRules() throws Exception {
 		throw savedException;
 	}
 	

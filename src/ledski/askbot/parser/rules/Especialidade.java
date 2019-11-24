@@ -7,16 +7,19 @@ import ledski.askbot.parser.SyntaxManager;
 
 /**
  * Regra:
- * ESPECIALIDADE -> Especialidade  :  String String
+ * ESPECIALIDADE  ->  Especialidade  :  String  String
+ * @author Leandro Ledski
  */
 public class Especialidade extends SyntaxRule {
 	
+	
 	public String name;
 	public String description;
-
+	
 	
 	public Especialidade() throws Exception, NotAToken, UnexpectedToken, UnfinishedCode {
 		SyntaxManager sm = new SyntaxManager();
+		
 		
 		try {
 			sm.getNextToken( _Especialidade );
@@ -26,11 +29,12 @@ public class Especialidade extends SyntaxRule {
 		}
 		catch( UnexpectedToken e ) {
 			sm.resetRulePointer();
-			sm.rethrowSavedExceptionFromCatchBlock();
+			sm.rethrowFromCatchBlockOfEnforcedRules();
 		}
 		
-
+		
 
 	}
-
+	
+	
 }

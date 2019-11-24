@@ -1,51 +1,36 @@
 
-	/** INICIO -> ESPECIALIDADE  LISTA_DE_QUESTOES  LISTA_DE_TESTES
-	 */
+	INICIO  ->  ESPECIALIDADE  QUESTAO  QUESTAO_OPCIONAL  TESTE  TESTE_OPCIONAL
 	
-	/** ESPECIALIDADE -> Especialidade  :  String String
-	 */
+	ESPECIALIDADE  ->  Especialidade  :  String String
 	
-	/** LISTA_DE_QUESTOES -> QUESTAO  LISTA_DE_QUESTOES | vazio
-	 */
+	LISTA_DE_QUESTOES  ->  QUESTAO  LISTA_DE_QUESTOES | **nada**
 	
-	/** QUESTAO -> Questao  qVar  :  String  ARRAY
-	 */
+	QUESTAO  ->  Questao  qVar  :  String  ARRAY
 	
-	/** ARRAY -> [  Numero - Numero  ]  |  [  PRIMITIVO  PRIMITIVO_OPCIONAL  ] |  [  ]
-	 */
+	ARRAY  ->  [  RANGE  ]  |  [  PRIMITIVO  PRIMITIVO_OPCIONAL  ]  |  [  ]
 	
-	/** PRIMITIVO -> Numero | String
-	 */
+	RANGE  ->  Numero - Numero
 	
-	/** PRIMITIVO_OPCIONAL -> , PRIMITIVO  PRIMITIVO_OPCIONAL | vazio
-	 */
+	PRIMITIVO  ->  Numero | String
 	
-	/** LISTA_DE_TESTES -> TESTE  LISTA_DE_TESTES | vazio
-	 */
+	PRIMITIVO_OPCIONAL  ->  , PRIMITIVO  PRIMITIVO_OPCIONAL  |  **nada**
 	
-	/** TESTE -> Teste  tVar  :  String  CONDICAO
-	 */
+	TESTE  ->  Teste  tVar  :  String  CONDICAO
 	
-	/** CONDICIONAL_BASICO -> CONDICAO  Entao  PRIMITIVO
-	 */
-	 
-	/** CONDICIONAL_FULL -> Se  CONDICIONAL_BASICO  CONDICAO_OPCIONAL  Senao  PRIMITIVO
-	 */
+	TESTE_OPCIONAL  ->  TESTE  TESTE_OPCIONAL  |  **nada**
+	
+	CONDICIONAL_BASICO  ->  CONDICAO  Entao  PRIMITIVO
+	
+	CONDICIONAL_FULL  ->  Se  CONDICIONAL_BASICO  CONDICAO_OPCIONAL  Senao  PRIMITIVO
 
-	/** CONDICIONAL_OUSE -> OuSe CONDICIONAL_BASICO CONDICIONAL_OUSE | vazio
-	 */
+	CONDICIONAL_OUSE  ->  OuSe CONDICIONAL_BASICO CONDICIONAL_OUSE  |  **nada**
 
-	/** CONDICAO -> TERMO  OP_COMPARACAO  TERMO
-	 */
+	CONDICAO  ->  TERMO  OP_COMPARACAO  TERMO
 	
-	/** CONDICAO_OPCIONAL -> OP_LOGICO  CONDICAO  CONDICAO_OPCIONAL | vazio
-	 */
+	CONDICAO_OPCIONAL  ->  OP_LOGICO  CONDICAO  CONDICAO_OPCIONAL  |  **nada**
 	
-	/** TERMO -> qVar | PRIMITIVO
-	 */
+	TERMO  ->  qVar | PRIMITIVO
 	
-	/** OP_COMPARACAO -> ==  |  >  |  >=  |  <  |  <=  |  != 
-	 */
+	OP_COMPARACAO  ->  ==  |  >  |  >=  |  <  |  <=  |  != 
 	
-	/** OP_LOGICO -> && | || 
-	 */
+	OP_LOGICO  ->  e | ou
