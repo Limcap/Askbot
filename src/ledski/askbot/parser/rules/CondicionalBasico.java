@@ -14,19 +14,17 @@ import ledski.askbot.parser.util.PairIfThen;
  */
 public class CondicionalBasico extends SyntaxRule {
 
-	public PairIfThen pairIfThen;
+	public PairIfThen pairIfThen = new PairIfThen();;
 	
 	public CondicionalBasico() throws Exception {
 		SyntaxManager sm = new SyntaxManager();
 		
 		
 		try {
-			PairIfThen ifthen = new PairIfThen();
-			
-			ifthen.condicoes.add( new Condicao() );
-			ifthen.condicoes.addAll( new CondicaoOpcional().list );
+			pairIfThen.condicoes.add( new Condicao() );
+			pairIfThen.condicoes.addAll( new CondicaoOpcional().list );
 			sm.getNextToken( _Entao );
-			ifthen.implicacao = new Primitivo();
+			pairIfThen.implicacao = new Primitivo();
 		}
 		catch ( UnexpectedToken e ) {
 			sm.resetRulePointer();
