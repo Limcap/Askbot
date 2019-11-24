@@ -14,20 +14,20 @@ import ledski.askbot.parser.SyntaxManager;
  * @author Leandro
  *
  */
-public class PrimitivoAdicional extends SyntaxRule {
+public class PrimitivoOpcional extends SyntaxRule {
 
-	public List<Primitivo> itemsAdicionais;
+	public List<Primitivo> listaDePrimitivos;
 	
-	public PrimitivoAdicional() throws Exception {
+	public PrimitivoOpcional() throws Exception {
 		SyntaxManager sm = new SyntaxManager();
-		itemsAdicionais = new ArrayList<Primitivo>(4);
+		listaDePrimitivos = new ArrayList<Primitivo>(4);
 		
 		
 		try {
 			sm.getNextToken( _virgula );
-			itemsAdicionais = new ArrayList<Primitivo>();
-			itemsAdicionais.add( new Primitivo() );
-			itemsAdicionais.addAll( new PrimitivoAdicional().itemsAdicionais );
+			listaDePrimitivos = new ArrayList<Primitivo>();
+			listaDePrimitivos.add( new Primitivo() );
+			listaDePrimitivos.addAll( new PrimitivoOpcional().listaDePrimitivos );
 		} catch( UnexpectedToken | UnfinishedCode e ) {
 			sm.resetRulePointer();
 		}

@@ -6,25 +6,24 @@ import ledski.askbot.parser.SyntaxExceptions.UnexpectedToken;
 import ledski.askbot.parser.SyntaxRule;
 import ledski.askbot.parser.SyntaxManager;
 
+/**
+ * Regra:
+ * PRIMITIVO -> Numero | String
+ * @author Leandro
+ *
+ */
 public class Primitivo extends SyntaxRule {
 
-	public String string;
-	public Double numero;
+	public String valor;
+	public boolean isNumero;
 	
 	public Primitivo() throws Exception {
 		SyntaxManager sm = new SyntaxManager();
 		
 		
 		try {
-			string = sm.getNextToken( _String ).lexema;
-		}
-		catch ( UnexpectedToken e ) {
-			sm.resetRulePointer();
-		}
-		
-		
-		if( sm.noSuccessYet() ) try {
-			numero =Double.valueOf( sm.getNextToken( _Numero ).lexema );
+			isNumero = sm.isNextToken( _Numero ); 
+			valor = sm.getNextToken( _String, _Numero ).lexema;
 		}
 		catch ( UnexpectedToken e ) {
 			sm.resetRulePointer();

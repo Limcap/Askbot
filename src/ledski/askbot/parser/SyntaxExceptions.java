@@ -1,13 +1,20 @@
 package ledski.askbot.parser;
 
 import ledski.askbot.lexer.Token;
+import ledski.askbot.lexer.Token.TokenType;
 
 public abstract class SyntaxExceptions {
 	
 	@SuppressWarnings("serial")
 	public static class UnexpectedToken extends Exception {
-		public UnexpectedToken( Token t, int pointer ) {
-			super( "\n" + t.toString() + "\nINDEX: " + pointer );
+		public UnexpectedToken( Token t, int pointer, TokenType[] types ) {
+			super( "\nFound: " + t.toString() + "\non index " + pointer + "\nExpected: " + tokenTypesToString( types ) );
+		}
+		private static String tokenTypesToString( TokenType[] types ) {
+			StringBuilder sb = new StringBuilder();
+			for( int i=0; i<types.length; i++ )
+				sb.append( types[i].name() + (i<types.length-1 ? ", " : "") );
+			return sb.toString();
 		}
 	}
 	
@@ -31,6 +38,5 @@ public abstract class SyntaxExceptions {
 			super( "\nEmpty array is now allowed\nINDEX: " + pointer );
 		}
 	}
-
 
 }

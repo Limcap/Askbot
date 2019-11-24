@@ -4,8 +4,8 @@ import java.util.List;
 
 import ledski.askbot.lexer.Token;
 import ledski.askbot.parser.rules.Especialidade;
-import ledski.askbot.parser.rules.ListaDeQuestoes;
-import ledski.askbot.parser.rules.ListaDeTestes;
+import ledski.askbot.parser.rules.QuestaoOpcional;
+import ledski.askbot.parser.rules.TesteOpcional;
 import ledski.askbot.parser.rules.Questao;
 import ledski.askbot.parser.rules.Teste;
 
@@ -21,8 +21,8 @@ public class SyntaxTree {
 		SyntaxManager sm = new SyntaxManager();
 		
 		especialidade = new Especialidade();
-		listaDeQuestoes = new ListaDeQuestoes().listaDeQuestoes;
-		listaDeTestes = new ListaDeTestes().listaDeTestes;
+		listaDeQuestoes = new QuestaoOpcional().listaDeQuestoes;
+		listaDeTestes = new TesteOpcional().listaDeTestes;
 		
 		sm.throwSavedExceptionAtTheEndOfStartRule();
 		

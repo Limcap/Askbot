@@ -59,7 +59,7 @@ public class Array extends SyntaxRule {
 			sm.getNextToken( _colchete1 );
 			listaDeItems = new ArrayList<Primitivo>();
 			listaDeItems.add( new Primitivo() );
-			listaDeItems.addAll( new PrimitivoAdicional().itemsAdicionais );
+			listaDeItems.addAll( new PrimitivoOpcional().listaDePrimitivos );
 			sm.getNextToken( _colchete2 );
 		}
 		catch ( UnexpectedToken e ) {

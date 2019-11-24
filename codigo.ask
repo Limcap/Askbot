@@ -2,16 +2,24 @@ Especialidade:
 "Cores"
 "Um bate papo sobre cores"
 
-Questao q1:
+Questao qCor:
 "Qual é a sua cor preferida?"
 [ "Vermelho", "Verde", "Azul", "Amarelo", "Rosa", "Laranja", "Branco", "Preto" ]
 
-Questao q2:
+Questao qTom:
 "Qual o tom vc prefere? Números menores para mais tons escuros."
 [ 1 - 10 ]
 
 Teste t1:
 "Nossa cor favorita é a mesma?"
+Se qCor == "Verde" & qTom > 6
+Entao "Sim"
+OuSe qCor == "Verde" & qTom <=6
+Entao "Também gosto de verde, mas prefiro claro"
+Senao "Você gosta de qCor e eu gosto de Verde" 
 
 Teste t2:
 "Bla"
+Se 1 == 1
+Entao 1
+Senao 2

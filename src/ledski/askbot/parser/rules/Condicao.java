@@ -1,32 +1,28 @@
 package ledski.askbot.parser.rules;
 
-import static ledski.askbot.lexer.Token.TokenType.*;
-
 import ledski.askbot.parser.SyntaxExceptions.UnexpectedToken;
-import ledski.askbot.parser.SyntaxRule;
 import ledski.askbot.parser.SyntaxManager;
+import ledski.askbot.parser.SyntaxRule;
 
 /**
  * Regra:
- * CONDICAO -> Se  LISTA_DE_COMPARACOES  Entao  String  Senao  String
+ * CONDICAO -> TERMO  OP_COMPARACAO  TERMO
  * @author Leandro
  */
 public class Condicao extends SyntaxRule {
 
-	public String valor;
+	public OpLogico opLogico = null;
+	public Termo termo1;
+	public OpComparacao opComparacao;
+	public Termo termo2;
 	
 	public Condicao() throws Exception {
 		SyntaxManager sm = new SyntaxManager();
 		
 		try {
-			sm.getNextToken( _Se );
-			new ListaDeComparacoes();
-			sm.getNextToken( _Entao );
-			sm.getNextToken( _String );
-			sm.getNextToken( _Senao );
-			sm.getNextToken( _String );
-			
-			
+			termo1 = new Termo();
+			opComparacao = new OpComparacao();
+			termo2 = new Termo();
 		}
 		catch ( UnexpectedToken e ) {
 			sm.resetRulePointer();

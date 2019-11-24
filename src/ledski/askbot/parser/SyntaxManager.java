@@ -1,5 +1,6 @@
 package ledski.askbot.parser;
 
+import java.util.Arrays;
 import java.util.List;
 
 import ledski.askbot.lexer.Token;
@@ -40,7 +41,7 @@ public class SyntaxManager {
 	
 	
 	
-	public Token getNextToken( TokenType type ) throws UnexpectedToken, NotAToken, UnfinishedCode {
+	public Token getNextToken( TokenType ...types ) throws UnexpectedToken, NotAToken, UnfinishedCode {
 		Token t;
 		try {
 			if( pointer2 > tokenList.size()-1 ) {
@@ -50,8 +51,10 @@ public class SyntaxManager {
 			if( t.type == TokenType._error ) {
 				throw new SyntaxExceptions.NotAToken( t, pointer2 );
 			}
-			else if( t.type != type ) {
-				throw new SyntaxExceptions.UnexpectedToken( t, pointer2  );
+			boolean found = false;
+			for( TokenType ty : types ) if( ty == t.type ) found = true;
+			if( !found ) {
+				throw new SyntaxExceptions.UnexpectedToken( t, pointer2, types );
 			}
 		}
 		catch( UnexpectedToken | NotAToken | UnfinishedCode e ) {
@@ -63,7 +66,33 @@ public class SyntaxManager {
 	}
 	
 	
+	/**
+	 * Emite exceção se o próximo token nao for dos tipos informados.
+	 * Avança o pointer para que a exceção seja lançada corretamente.
+	 * @param types
+	 */
+	public void assertNextToken( TokenType ...types ) throws UnexpectedToken, NotAToken, UnfinishedCode {
+		if( !isNextToken( types ) ) getNextToken( types );
+	}
 	
+	
+	/**
+	 * Checa se o próximo token é de algum dos tipos informados.
+	 * Não avança o pointer, não causa erro.
+	 * @param types
+	 * @return
+	 */
+	public boolean isNextToken( TokenType ... types ) {
+		Token t = tokenList.get( pointer2 );
+		for( TokenType ty : types ) if( ty == t.type ) return true;
+		return false;
+	}
+	
+	
+	/**
+	 * Retorna o indice em que o pointer se encontra.
+	 * @return
+	 */
 	public int peekPointer() {
 		return pointer2;
 	}

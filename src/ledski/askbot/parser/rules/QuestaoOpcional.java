@@ -9,15 +9,15 @@ import ledski.askbot.parser.SyntaxExceptions.*;
 
 /**
  * Regra:
- * LISTA_DE_QUESTOES -> QUESTAO  LISTA_DE_QUESTOES | vazio
+ * QUESTAO_OPCIONAL -> QUESTAO  QUESTAO_OPCIONAL | vazio
  * @author Leandro
  *
  */
-public class ListaDeQuestoes extends SyntaxRule {
+public class QuestaoOpcional extends SyntaxRule {
 	
 	public List<Questao> listaDeQuestoes;
 	
-	public ListaDeQuestoes() throws Exception { // UnfinishedCode, NotAToken
+	public QuestaoOpcional() throws Exception { // UnfinishedCode, NotAToken
 		SyntaxManager sm = new SyntaxManager();
 		
 		
@@ -26,7 +26,7 @@ public class ListaDeQuestoes extends SyntaxRule {
 		// tekenizedCodeManager é reposicionado para o índice onde estava no início da regra.
 		try {
 			listaDeQuestoes.add( new Questao() );
-			listaDeQuestoes.addAll( new ListaDeQuestoes().listaDeQuestoes );
+			listaDeQuestoes.addAll( new QuestaoOpcional().listaDeQuestoes );
 		}
 		catch( UnexpectedToken | UnfinishedCode e ) {
 			sm.resetRulePointer();
