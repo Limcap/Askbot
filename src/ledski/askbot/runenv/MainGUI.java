@@ -14,9 +14,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -28,6 +31,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -41,28 +45,46 @@ import ledski.util.EasyMenuBar.ItemAction;;
 @SuppressWarnings("serial")
 public class MainGUI extends JFrame {
 	
+	// COMPONENTES GERAIS
 	private JFrame thisframe;
 	private JPanel mainPanel;
-	private JTextArea txa1;
-	private JScrollPane scrollPane1;
-	private JTextArea txa2;
-	private JScrollPane scrollPane2;
-	private JTextField txtInput;
-	private JButton btAvancar;
-	private JPanel endPanel;
 	private Font monoFont;
+	final JFileChooser fileChooser = new JFileChooser();
+	private File currentFile;
 	
-	final JFileChooser fc = new JFileChooser();
+	// PAINEL DO RUNTIME
+	private JPanel panelRuntime;
+	private JTextArea txaRuntime;
+	private JTextArea txaInput;
+	private JButton btEditor;
+	private JButton btReiniciar;
+	
+	// PAINEL DO EDITOR
+	private JPanel panelEditor;
+	private JTextArea txaEditor;
+	private JScrollPane scrollPaneEditor;
+	private JPanel panelConsole;
+	private JTextArea txaConsole;
+	private JScrollPane scrollPaneConsole;
+	private JButton btConsole;
+	private JButton btAnalisar;
+	private JButton btExecutar;
+	
+	
+	
+	
 	
 	public MainGUI() {
 		super( "Askbot" );
 		configurarJanela();
 		registrarFonte();
-		comfigComponentes();
+		configComponentes();
 		montarLayout();
-		acoplarEventos();
-		
+		eventosDeComponentes();
 	}
+	
+	
+	
 	
 	
 	/**
@@ -80,6 +102,9 @@ public class MainGUI extends JFrame {
 	}
 	
 	
+	
+	
+	
 	/**
 	 * Registra uma fonte para poder ser usada nos componentes
 	 */
@@ -91,7 +116,7 @@ public class MainGUI extends JFrame {
 			// Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("./res/RobotoMono-Regular.ttf")).deriveFont(12f);
 			
 			// Carregar o arquivo de fonte. Funciona em um JAR 
-			InputStream fontInputStream= getClass().getResourceAsStream("/resources/RobotoMono-Regular.ttf" );
+			InputStream fontInputStream= getClass().getResourceAsStream("/resources/NotoMono-Regular.ttf" );
 			Font customFont = Font.createFont(Font.TRUETYPE_FONT, fontInputStream ).deriveFont(12f);
 			
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -102,6 +127,9 @@ public class MainGUI extends JFrame {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
 	
 	
 	/**
@@ -116,103 +144,118 @@ public class MainGUI extends JFrame {
 		
 		// PAINEL PRINCIPAL
 		espacamento( 1 );
-		mainPanel.add( scrollPane1 );
-		espacamento( 1 );
-		mainPanel.add( scrollPane2 );
-//		espacamento( 1 );
+		mainPanel.add( scrollPaneEditor );
+		
+		mainPanel.add( panelConsole );
+		panelConsole.add( espacamento( 1 ) );
+		panelConsole.add( scrollPaneConsole );
+
 //		adicionar( txtInput );
-		espacamento( 1 );
-		adicionar( btAvancar );
-		espacamento( 1 );
+		mainPanel.add( espacamento( 1 ) );
+		adicionar( btConsole, btAnalisar, btExecutar );
+		mainPanel.add( espacamento( 1 ) );
 		
 		// AREA EXPANSÍVEL
 //		mainPanel.add( endPanel );
 	}
 	
 	
-	private void comfigComponentes() {
+	
+	
+	
+	/**
+	 * Faz a configuração inicial de todos os elementos da GUI
+	 */
+	private void configComponentes() {
 		
+		// PAINEL GERAL
 		mainPanel = new JPanel();
 		BoxLayout mainPanelLayout = new BoxLayout( mainPanel, BoxLayout.Y_AXIS );
 		mainPanel.setLayout( mainPanelLayout );
-		mainPanel.setBorder( new EmptyBorder( 0,7,2,7 ) );
+		mainPanel.setBorder( new EmptyBorder( 0,5,2,5 ) );
+		monoFont = new Font("Noto Mono", Font.PLAIN, 14);
 		
 		
-		monoFont = new Font("Roboto Mono", Font.PLAIN, 14);
+		// PAINEL DO EDITOR
+		txaEditor = new JTextArea(10,50);
+		txaEditor.setForeground( Color.WHITE );
+		txaEditor.setBackground( Color.DARK_GRAY );
+		txaEditor.setCaretColor( Color.WHITE );
+		txaEditor.setMargin( new Insets( 10, 10, 10, 10 ) );
+		txaEditor.setFont( monoFont );
+		txaEditor.setLineWrap( true );
+//		txaEditor.setEditable( false );
+		txaEditor.setText( WelcomeText.textoInicial() );
+		
+		scrollPaneEditor = new JScrollPane( txaEditor );
+		scrollPaneEditor.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPaneEditor.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrollPaneEditor.getVerticalScrollBar().setUnitIncrement(8);
 		
 		
-		txa1 = new JTextArea(19,50);
-		txa1.setLineWrap( true );
-//		txaCode.setEditable( false );
-		txa1.setFont( monoFont );
-//		txaOut.setBorder( BorderFactory.createLineBorder( Color.BLACK, 1 ));
-		txa1.setForeground( Color.WHITE );
-		txa1.setBackground( Color.DARK_GRAY );
-		txa1.setCaretColor( Color.WHITE );
-		txa1.setMargin( new Insets( 10, 10, 10, 10 ) );
+		// PAINEL DO CONSOLE
+		panelConsole = new JPanel();
+		BoxLayout panelConsoleLayout = new BoxLayout( panelConsole, BoxLayout.Y_AXIS);
+		panelConsole.setLayout( panelConsoleLayout );
+		preventVerticalStretch( panelConsole );
 		
-		scrollPane1 = new JScrollPane( txa1 );
-		scrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		scrollPane1.getVerticalScrollBar().setUnitIncrement(8);
-//		scrollPane.setViewportView( txaOut );
+		txaConsole = new JTextArea(2,50);
+		txaConsole.setLineWrap( true );
+		txaConsole.setEditable( true );
+		txaConsole.setFont( monoFont );
+		txaConsole.setForeground( Color.BLACK );
+		txaConsole.setBackground( Color.LIGHT_GRAY );
+		txaConsole.setCaretColor( Color.WHITE );
+		txaConsole.setMargin( new Insets( 10, 10, 10, 10 ) );
 		
+		scrollPaneConsole = new JScrollPane( txaConsole );
+		scrollPaneConsole.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPaneConsole.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrollPaneConsole.getVerticalScrollBar().setUnitIncrement(8);
 		
-		txa2 = new JTextArea(2,50);
-		txa2.setLineWrap( true );
-//		txa2.setEditable( false );
-		txa2.setFont( monoFont );
-//		textAreaError.setBorder( BorderFactory.createLineBorder( Color.BLACK, 1 ));
-		txa2.setForeground( Color.BLACK );
-		txa2.setBackground( Color.LIGHT_GRAY );
-		txa2.setCaretColor( Color.WHITE );
-		txa2.setMargin( new Insets( 10, 10, 10, 10 ) );
-		
-		scrollPane2 = new JScrollPane( txa2 );
-		scrollPane2.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		scrollPane2.getVerticalScrollBar().setUnitIncrement(8);
-//		scrollPane.setViewportView( txaOut );
-
-		
-		txtInput = new JTextField("Responda aqui");
-		txtInput.setBackground( Color.DARK_GRAY );
-		txtInput.setForeground( Color.WHITE );
-		txtInput.setCaretColor( Color.WHITE );
-		txtInput.setBorder( new EmptyBorder( new Insets( 5, 5, 5, 5 ) ) );
-		txtInput.setMargin( new Insets( 5, 5, 5, 5 ) );
-		
-		btAvancar = new JButton("Avançar");
+		panelConsole.setVisible( false );
 		
 		
-		// AREA EXPANSIVEL
-		// ## alow for texareas to expand down when pressing enter after preventVerticalStretch has been applied
-		endPanel = new JPanel( new GridBagLayout() );
-		endPanel.setOpaque( false );
-		//endPanel.setBackground( new Color( 0,0,0,0 ) );
+		// PAINEL DOS BOTOES
+		btConsole = new JButton("Mostrar Console");
+		btAnalisar = new JButton("Analisar Código");
+		btExecutar = new JButton("Executar Código");
 		
+		
+		// CAIXAS DE DIALOGO
 		File workingDirectory = new File(System.getProperty("user.dir"));
-		fc.setCurrentDirectory(workingDirectory);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Arquivos de código do Askbot", "ask");
-		fc.setFileFilter(filter);
-		
+		fileChooser.setCurrentDirectory(workingDirectory);
+		fileChooser.setFileFilter(filter);
 	}
 	
 	
-	private void acoplarEventos() {
-		btAvancar.addActionListener( new ActionListener() {
-			public void actionPerformed( ActionEvent e ) {
-				scrollPane2.setVisible( false );
-				mainPanel.revalidate();
-			}
-		} );
-		
-		thisframe.addWindowListener( new WindowAdapter() {
-			public void windowOpened( WindowEvent e ){
-				txtInput.requestFocus();
-			}
-		}); 
+	
+	
+	
+	/**
+	 * Configura os eventos de input de usuário.
+	 */
+	private void eventosDeComponentes() {
+		thisframe.addWindowListener( new WindowAdapter() { public void windowOpened( WindowEvent e ){
+			txaEditor.requestFocus();
+		}});
+
+		btConsole.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent e ) {
+			panelConsole.setVisible( !panelConsole.isVisible() );
+			btConsole.setText( panelConsole.isVisible() ? "Esconder Console" : "Mostrar Console" );
+			mainPanel.repaint();
+			mainPanel.revalidate();
+		}});
+
+		btAnalisar.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent e ) {
+			// Analisar codigo
+		}});
 	}
+	
+	
+	
+	
 	
 	
 	/** 
@@ -226,9 +269,11 @@ public class MainGUI extends JFrame {
 		
 		// ITENS DO MENU
 		.menu( "Arquivo" )
-		.item( "Criar um novo Askbot" )
-		.item( "Abrir..." ).onClick( "abrir" )
-		.item( "Abrir e executar..." )
+		.item( "Criar um novo Askbot" ).onClick( "new" )
+		.item( "Abrir..." ).onClick( "open" )
+		.item( "Salvar" ).onClick( "save" )
+		.item(  "Salvar como..." ).onClick( "saveAs" )
+		.item(  "Fechar" ).onClick( "close" )
 
 		.menu( "Código" )
 		.item( "Editar" )
@@ -252,22 +297,41 @@ public class MainGUI extends JFrame {
 		.item( "Como usar" )
 		.item( "Sobre" )
 //		
-		.action( "abrir", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
-			int a = fc.showOpenDialog( thisframe );
+		.action( "new", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
+			currentFile = null;
+			txaConsole.setText( null );
+			txaEditor.setText( null );
+			thisframe.setTitle( "Askbot - Sem Nome" );
+		}})
+		.action( "open", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
+			int a = fileChooser.showOpenDialog( thisframe );
 			if( a == JFileChooser.APPROVE_OPTION ) {
-				File file = fc.getSelectedFile();
+				currentFile = fileChooser.getSelectedFile();
 				List<String> fileContents;
-				txa1.setText( null );
+				txaEditor.setText( null );
 				try {
-					fileContents = Files.readAllLines( Paths.get( file.toURI() ) );
-					fileContents.forEach( line -> txa1.append( line + "\n" ) );
-					txa1.setCaretPosition( 0 );
+					fileContents = Files.readAllLines( Paths.get( currentFile.toURI() ), StandardCharsets.UTF_8 );
+					fileContents.forEach( line -> txaEditor.append( line + "\n" ) );
+					txaEditor.setCaretPosition( 0 );
+					thisframe.setTitle( "Askbot - " + currentFile.getName() );
 				} catch( IOException e1 ) {
-					txa1.append( "Não foi possível ler o aquivo selecionado. Verifique se é um arquivo de texto." );
+					txaEditor.append( "Não foi possível ler o aquivo selecionado. Verifique se é um arquivo de texto." );
 					e1.printStackTrace();
 				}
 				
 			}
+		}})
+		.action( "save", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
+			arquivoSalvar();
+		}})
+		.action( "saveAs", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
+			arquivoSalvarComo();
+		}})
+		.action( "close", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
+			currentFile = null;
+			txaConsole.setText( null );
+			txaEditor.setText( null );
+			thisframe.setTitle( "Askbot - Sem Nome" );
 		}})
 //		// ACOES DO MENU
 //		.action( "fill", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
@@ -284,9 +348,56 @@ public class MainGUI extends JFrame {
 	}
 	
 	
-	// ====================================================================================================================
+	// =================================================================================================================
+	// MÉTODOS DE ABRIR E SALVAR ARQUIVO
+	//==================================================================================================================
+	
+	
+	
+	private void arquivoSalvar() {
+		if( currentFile == null ) {
+			arquivoSalvarComo();
+		} else try {
+			BufferedWriter writer = new BufferedWriter( new FileWriter( currentFile ) );
+			writer.write( txaEditor.getText() );
+			writer.close();
+		}
+		catch( IOException e ) {
+			txaConsole.setText( "Não foi possível salvar o arquivo" );
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	private void arquivoSalvarComo() {
+		int selected = fileChooser.showSaveDialog( thisframe );
+		if( selected == JFileChooser.APPROVE_OPTION ) {
+			File f = fileChooser.getSelectedFile();
+			if( !f.isDirectory() ) {
+				if( !f.getAbsolutePath().endsWith( ".ask" ))
+					f = new File( f.getAbsolutePath() + ".ask" );
+				if( f.exists() ) {
+					int i = JOptionPane.showConfirmDialog( thisframe, "O arquivo selecionado já existe. Substituí-lo?" );
+					if( i == JOptionPane.YES_OPTION ) {
+						currentFile = f;
+						arquivoSalvar();
+					}
+				}
+				else {
+					currentFile = f;
+					arquivoSalvar();
+				}
+				thisframe.setTitle( "Askbot - " + f.getName() );
+			}
+		}
+	}
+	
+	
+	
+	// =================================================================================================================
 	// MÉTODOS UTILITARIOS
-	//=====================================================================================================================
+	//==================================================================================================================
 	
 	
 	
@@ -301,8 +412,8 @@ public class MainGUI extends JFrame {
 	
 	
 	
-	private void espacamento( int s ) {
-		mainPanel.add( Box.createRigidArea(new Dimension(5*s,5*s)) );
+	private Component espacamento( int s ) {
+		return Box.createRigidArea(new Dimension(5*s,5*s));
 	}
 	
 	
@@ -327,11 +438,11 @@ public class MainGUI extends JFrame {
 				pH.add( cs[i], new GridBagConstraints(i,0,1,1,1,1,GridBagConstraints.LINE_START,GridBagConstraints.BOTH,new Insets(0,0,0,0),1,1) );	
 			}
 			else {
-				pH.add( cs[i], new GridBagConstraints(i,0,1,1,0,0,GridBagConstraints.LINE_START,GridBagConstraints.NONE,new Insets(0,0,0,10),1,1) );
+				pH.add( cs[i], new GridBagConstraints(i,0,1,1,1,0,GridBagConstraints.LINE_START,GridBagConstraints.HORIZONTAL,new Insets(0,0,0,5),1,1) );
 			}
 		}
-		if( cs.length > 1 )
-			pH.add( new JLabel(), new GridBagConstraints(cs.length,0,1,1,1,1,GridBagConstraints.LINE_START,GridBagConstraints.BOTH,new Insets(0,0,0,0),1,1) );
+//		if( cs.length > 1 )
+//			pH.add( new JLabel(), new GridBagConstraints(cs.length,0,1,1,1,1,GridBagConstraints.LINE_START,GridBagConstraints.BOTH,new Insets(0,0,0,0),1,1) );
 		mainPanel.add( pH );
 	}
 

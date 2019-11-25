@@ -1,5 +1,6 @@
 package ledski.askbot;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -11,6 +12,7 @@ import javax.swing.SwingUtilities;
 
 import ledski.askbot.parser.SyntaxTree;
 import ledski.askbot.lexer.Automato;
+import ledski.askbot.lexer.ConflictingTransitionException;
 import ledski.askbot.lexer.Token;
 import ledski.askbot.lexer.Token.TokenType;
 import ledski.util.Gridder;
@@ -33,7 +35,14 @@ public class Main {
 	}
 	
 	
-	public static void compilarCodigo() throws Exception {
+	
+	/**
+	 * Executa o lexer em uma lista de Strings, um String ou um Character e retorna uma lista de tokens.
+	 * @return List<Token>
+	 * @throws ConflictingTransitionException 
+	 * @throws IOException 
+	 */
+	public static List<Token> lexer() throws ConflictingTransitionException, IOException {
 		Automato a2 = new Automato();
 		a2.verboseLevel012 = 1;
 //		a2.mostrarCaminhosNoConsole();
@@ -53,16 +62,24 @@ public class Main {
 		for( Token t : tokenList ) {
 			System.out.println( t );
 		}
-		
-		
+		return tokenList;
+	}
+	
+	
+	
+	/**
+	 * Esecuta o parser. Recebe uma lista de tokens e os verifica sobre as regras da gramática,
+	 * criando uma árvore sintática.
+	 * @return SyntaxTree
+	 * @throws Exception
+	 */
+	public static SyntaxTree parser( List<Token> tokenList ) throws Exception {
 		System.out.println( "\n\nTOKENS ENCONTRADOS:" );
 		Gridder gr = new Gridder();
 		tokenList.forEach( t -> gr.append( t.toGridder() ) );
 		System.out.println( gr.publish() );
 		
-		
-		// PARSER
-		new SyntaxTree( tokenList );
+		return new SyntaxTree( tokenList );
 	}
 	
 	
