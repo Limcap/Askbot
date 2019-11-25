@@ -25,6 +25,8 @@ public class SyntaxManager {
 	public static void setTokenList( List<Token> t ) {
 		tokenList = t;
 		pointer2 = 0;
+		savedException = null;
+		savedExceptionIndexOfToken = 0;
 	}
 	
 	
@@ -43,7 +45,7 @@ public class SyntaxManager {
 		Token t;
 		try {
 			if( pointer2 > tokenList.size()-1 ) {
-				throw new SyntaxExceptions.UnfinishedCode();
+				throw new SyntaxExceptions.UnfinishedCode( tokenList.get(tokenList.size()-1) );
 			}
 			t = tokenList.get( pointer2++ );
 			if( t.type == TokenType._error ) {
@@ -83,6 +85,7 @@ public class SyntaxManager {
 	 * @return
 	 */
 	public boolean isNextToken( TokenType ... types ) {
+		if( pointer2 >= tokenList.size() ) return false;
 		Token t = tokenList.get( pointer2 );
 		for( TokenType ty : types ) if( ty == t.type ) return true;
 		return false;

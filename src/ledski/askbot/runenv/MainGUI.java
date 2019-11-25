@@ -37,6 +37,10 @@ import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import ledski.askbot.Main;
+import ledski.askbot.lexer.ConflictingTransitionException;
+import ledski.askbot.lexer.Token;
+import ledski.askbot.parser.SyntaxTree;
 import ledski.util.EasyMenuBar;
 import ledski.util.EasyMenuBar.ItemAction;;
 
@@ -66,6 +70,7 @@ public class MainGUI extends JFrame {
 	private JScrollPane scrConsole;
 	private JButton btConsole;
 	private JButton btAnalisar;
+	private JButton btVerTokens;
 	private JButton btExecutar;
 	
 	
@@ -180,7 +185,7 @@ public class MainGUI extends JFrame {
 		preventVerticalStretch( txaInput );
 		
 		btEditor = new JButton( "Editor" );
-		btReiniciar = new JButton( "Reiniciar script" );
+		btReiniciar = new JButton( "Reiniciar" );
 		
 		// POSICIONAMENTO
 		panelRuntime.add( scrRuntime );
@@ -226,7 +231,7 @@ public class MainGUI extends JFrame {
 		subpanelConsole.setLayout( panelConsoleLayout );
 		
 		// COMPONENTES DO SUBPAINEL DO CONSOLE
-		txaConsole = new JTextArea(2,50);
+		txaConsole = new JTextArea(3,50);
 		txaConsole.setLineWrap( true );
 		txaConsole.setEditable( true );
 		txaConsole.setFont( monoFont );
@@ -243,6 +248,7 @@ public class MainGUI extends JFrame {
 		
 		btConsole = new JButton("Mostrar Console");
 		btAnalisar = new JButton("Analisar Código");
+		btVerTokens = new JButton("Identificar Tokens");
 		btExecutar = new JButton("Executar Script");
 		
 		
@@ -250,7 +256,7 @@ public class MainGUI extends JFrame {
 		panelEditor.add( scrEditor );		
 		panelEditor.add( espacamento( 1 ) );
 		panelEditor.add( subpanelConsole );
-		panelEditor.add( horizontalGroup( btConsole, btAnalisar, btExecutar ) );
+		panelEditor.add( horizontalGroup( btConsole, btAnalisar, btVerTokens, btExecutar ) );
 		panelEditor.add( espacamento( 1 ) );
 		
 		subpanelConsole.add( scrConsole );
@@ -278,14 +284,28 @@ public class MainGUI extends JFrame {
 		}});
 
 		btConsole.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent e ) {
-			subpanelConsole.setVisible( !subpanelConsole.isVisible() );
-			btConsole.setText( subpanelConsole.isVisible() ? "Esconder Console" : "Mostrar Console" );
-			thisframe.repaint();
-			thisframe.revalidate();
+			toggleConsole( null );
 		}});
 
 		btAnalisar.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent e ) {
-			// Analisar codigo
+			analisarCodigo();
+		}});
+		
+		btVerTokens.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent e ) {
+			List<Token> tokenList;
+			try {
+				tokenList = Main.lexer( txaEditor.getText() );
+				txaRuntime.setText( "TOKENS ENCONTRADOS:\n\n" );
+				for( Token t : tokenList ) txaRuntime.append( t.toString() + "\n" );
+			} catch( ConflictingTransitionException | IOException e1 ) {
+				txaConsole.setText( e1.getMessage() );
+				e1.printStackTrace();
+			}
+			viewRuntime();
+		}});
+		
+		btExecutar.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent e ) {
+			executar();
 		}});
 		
 		btEditor.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent e ) {
@@ -355,6 +375,7 @@ public class MainGUI extends JFrame {
 					fileContents.forEach( line -> txaEditor.append( line + "\n" ) );
 					txaEditor.setCaretPosition( 0 );
 					thisframe.setTitle( "Askbot - " + currentFile.getName() );
+					viewEditor();
 				} catch( IOException e1 ) {
 					txaEditor.append( "Não foi possível ler o aquivo selecionado. Verifique se é um arquivo de texto." );
 					e1.printStackTrace();
@@ -407,6 +428,39 @@ public class MainGUI extends JFrame {
 		txaInput.requestFocus();
 		thisframe.revalidate();
 		thisframe.repaint();
+	}
+	
+	private void showOnConsole( String msg, Color color ) {
+		if( color == null ) color = Color.BLACK;
+		txaConsole.setText( msg );
+		txaConsole.setForeground( color );
+		toggleConsole( true );
+	}
+	
+	private void toggleConsole( Boolean visible) {
+		if( visible == null )
+			subpanelConsole.setVisible( !subpanelConsole.isVisible() );
+		else
+			subpanelConsole.setVisible( visible );
+		btConsole.setText( subpanelConsole.isVisible() ? "Esconder Console" : "Mostrar Console" );
+		thisframe.repaint();
+		thisframe.revalidate();
+	}
+	
+	private boolean analisarCodigo() {
+		String msg = Main.compilar( txaEditor.getText() );
+		if( msg == null ) showOnConsole( "Beautiful!", new Color(0,140,30) );
+		else showOnConsole( msg, Color.RED );
+		return msg == null ? true : false;
+	}
+	
+	private void executar() {
+		if( analisarCodigo() ) {
+			viewRuntime();
+			SyntaxTree tree = Main.tree;
+			txaRuntime.setText( null );
+			txaRuntime.append( tree.especialidade.name + "\n" + tree.especialidade.description + "\n" );
+		}
 	}
 	
 	

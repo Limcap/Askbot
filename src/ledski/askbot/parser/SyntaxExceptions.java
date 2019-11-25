@@ -8,7 +8,11 @@ public abstract class SyntaxExceptions {
 	@SuppressWarnings("serial")
 	public static class UnexpectedToken extends Exception {
 		public UnexpectedToken( Token t, int pointer, TokenType[] types ) {
-			super( "\nFound: " + t.toString() + "\non index " + pointer + "\nExpected: " + tokenTypesToString( types ) );
+			super(
+				"Erro: Token inesperado." +
+				"\nEncontrado: " + t.lexema + " (" + t.type.name() + ") no index " + pointer +
+				"\nEsperado: " + tokenTypesToString( types )
+			);
 		}
 		private static String tokenTypesToString( TokenType[] types ) {
 			StringBuilder sb = new StringBuilder();
@@ -21,14 +25,20 @@ public abstract class SyntaxExceptions {
 	@SuppressWarnings("serial")
 	public static class NotAToken extends Exception {
 		public NotAToken( Token t, int pointer ) {
-			super( "\n" + t.toString() + "\nINDEX: " + pointer );
+			super(
+				"Erro: Token não identificado:"+ 
+				"\nEncontrado: " + t.lexema + " (_naoIdentificado) no index " + pointer
+			);
 		}
 	}
 	
 	@SuppressWarnings("serial")
 	public static class UnfinishedCode extends Exception {
-		public UnfinishedCode() {
-			super( "\nUnexpected end of code" );
+		public UnfinishedCode( Token t ) {
+			super(
+				"Erro: Código inacabado." + 
+				"\nEncontrado: " + t.lexema + " (" + t.type.name() + ")"
+			);
 		}
 	}
 	

@@ -43,9 +43,10 @@ public class Automato {
 	/**
 	 * Reinicia o autômato. Descarta todo oo progresso de navegação feito.
 	 */
-	private void restart() {
+	public void restart() {
 		currentNode = nodeList.get( 0 );
 		lexema = new StringBuilder();
+		isInErrorState = false;
 	}
 	
 	
