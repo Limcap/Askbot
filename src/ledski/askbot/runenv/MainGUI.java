@@ -73,6 +73,9 @@ public class MainGUI extends JFrame {
 	private JButton btVerTokens;
 	private JButton btExecutar;
 	
+	// INTERPRETADOR
+	private Interpreter interpreter = new Interpreter();
+	
 	
 	
 	
@@ -457,9 +460,9 @@ public class MainGUI extends JFrame {
 	private void executar() {
 		if( analisarCodigo() ) {
 			viewRuntime();
-			SyntaxTree tree = Main.tree;
+			interpreter.reset();
 			txaRuntime.setText( null );
-			txaRuntime.append( tree.especialidade.name + "\n" + tree.especialidade.description + "\n" );
+			txaRuntime.append( interpreter.getNextBotLine() );
 		}
 	}
 	
