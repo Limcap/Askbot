@@ -29,13 +29,11 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -47,7 +45,6 @@ public class MainGUI extends JFrame {
 	
 	// COMPONENTES GERAIS
 	private JFrame thisframe;
-	private JPanel mainPanel;
 	private Font monoFont;
 	final JFileChooser fileChooser = new JFileChooser();
 	private File currentFile;
@@ -55,17 +52,18 @@ public class MainGUI extends JFrame {
 	// PAINEL DO RUNTIME
 	private JPanel panelRuntime;
 	private JTextArea txaRuntime;
+	private JScrollPane scrRuntime;
 	private JTextArea txaInput;
 	private JButton btEditor;
 	private JButton btReiniciar;
 	
-	// PAINEL DO EDITOR
+	// PAINEL DO EDITOR	
 	private JPanel panelEditor;
 	private JTextArea txaEditor;
-	private JScrollPane scrollPaneEditor;
-	private JPanel panelConsole;
+	private JScrollPane scrEditor;
+	private JPanel subpanelConsole;
 	private JTextArea txaConsole;
-	private JScrollPane scrollPaneConsole;
+	private JScrollPane scrConsole;
 	private JButton btConsole;
 	private JButton btAnalisar;
 	private JButton btExecutar;
@@ -78,9 +76,8 @@ public class MainGUI extends JFrame {
 		super( "Askbot" );
 		configurarJanela();
 		registrarFonte();
-		configComponentes();
 		montarLayout();
-		eventosDeComponentes();
+		registrarEventosDeComponentes();
 	}
 	
 	
@@ -92,11 +89,12 @@ public class MainGUI extends JFrame {
 	 * tamanho, posicionamento e inicializa a variável thisFrame.
 	 */
 	private void configurarJanela() {
-		
-		thisframe = this;
 		setPreferredSize( new Dimension( 800, 600) );
 		setMinimumSize( new Dimension( 300, 500 ) );
 		setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+
+		thisframe = this;
+
 		pack();
 		centralizarNaTela();
 	}
@@ -121,9 +119,10 @@ public class MainGUI extends JFrame {
 			
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(customFont);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch(FontFormatException e) {
+			
+			monoFont = new Font("Noto Mono", Font.PLAIN, 14);
+		}
+		catch (IOException | FontFormatException e) {
 			e.printStackTrace();
 		}
 	}
@@ -137,26 +136,59 @@ public class MainGUI extends JFrame {
 	 * e faz o posicionamento dos elementos
 	 */
 	private void montarLayout() {
-		
-		// JANELA
 		setJMenuBar( barraDeMenu() );
-		setContentPane( mainPanel );
+		buildPanelEditor();
+		buildPanelRuntime();
+		viewRuntime();
+	}
+	
+	
+	
+	
+	
+	private void buildPanelRuntime() {
 		
-		// PAINEL PRINCIPAL
-		espacamento( 1 );
-		mainPanel.add( scrollPaneEditor );
+		// PAINEL
+		panelRuntime = new JPanel();
+		BoxLayout panelRuntimeLayout = new BoxLayout( panelRuntime, BoxLayout.Y_AXIS );
+		panelRuntime.setLayout( panelRuntimeLayout );
+		panelRuntime.setBorder( new EmptyBorder( 0,5,2,5 ) );
 		
-		mainPanel.add( panelConsole );
-		panelConsole.add( espacamento( 1 ) );
-		panelConsole.add( scrollPaneConsole );
-
-//		adicionar( txtInput );
-		mainPanel.add( espacamento( 1 ) );
-		adicionar( btConsole, btAnalisar, btExecutar );
-		mainPanel.add( espacamento( 1 ) );
+		// COMPONENTES
+		txaRuntime = new JTextArea(10,50);
+		txaRuntime.setForeground( Color.CYAN );
+		txaRuntime.setBackground( Color.DARK_GRAY );
+		txaRuntime.setCaretColor( Color.WHITE );
+		txaRuntime.setMargin( new Insets( 10, 10, 10, 10 ) );
+		txaRuntime.setFont( monoFont );
+		txaRuntime.setLineWrap( true );
+		txaRuntime.setEditable( true );
+		txaRuntime.setText( WelcomeText.textoInicial() );
 		
-		// AREA EXPANSÍVEL
-//		mainPanel.add( endPanel );
+		scrRuntime = new JScrollPane( txaRuntime );
+		scrRuntime.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrRuntime.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrRuntime.getVerticalScrollBar().setUnitIncrement(8);
+		
+		txaInput = new JTextArea(2,50);
+		txaInput.setForeground( Color.WHITE );
+		txaInput.setBackground( new Color(100,100,100) );
+		txaInput.setCaretColor( Color.WHITE );
+		txaInput.setMargin( new Insets( 10, 10, 10, 10 ) );
+		txaInput.setFont( monoFont );
+		txaInput.setLineWrap( true );
+		preventVerticalStretch( txaInput );
+		
+		btEditor = new JButton( "Editor" );
+		btReiniciar = new JButton( "Reiniciar script" );
+		
+		// POSICIONAMENTO
+		panelRuntime.add( scrRuntime );
+		panelRuntime.add( espacamento( 1 ) );
+		panelRuntime.add( txaInput );
+		panelRuntime.add( espacamento( 1 ) );
+		panelRuntime.add( horizontalGroup( btEditor, btReiniciar ) );
+		panelRuntime.add( espacamento( 1 ) );
 	}
 	
 	
@@ -166,17 +198,15 @@ public class MainGUI extends JFrame {
 	/**
 	 * Faz a configuração inicial de todos os elementos da GUI
 	 */
-	private void configComponentes() {
+	private void buildPanelEditor() {
 		
-		// PAINEL GERAL
-		mainPanel = new JPanel();
-		BoxLayout mainPanelLayout = new BoxLayout( mainPanel, BoxLayout.Y_AXIS );
-		mainPanel.setLayout( mainPanelLayout );
-		mainPanel.setBorder( new EmptyBorder( 0,5,2,5 ) );
-		monoFont = new Font("Noto Mono", Font.PLAIN, 14);
+		// PAINEL GERAL DO EDITOR
+		panelEditor = new JPanel();
+		BoxLayout mainPanelLayout = new BoxLayout( panelEditor, BoxLayout.Y_AXIS );
+		panelEditor.setLayout( mainPanelLayout );
+		panelEditor.setBorder( new EmptyBorder( 0,5,2,5 ) );
 		
-		
-		// PAINEL DO EDITOR
+		// COMPONENTES DO EDITOR
 		txaEditor = new JTextArea(10,50);
 		txaEditor.setForeground( Color.WHITE );
 		txaEditor.setBackground( Color.DARK_GRAY );
@@ -184,21 +214,18 @@ public class MainGUI extends JFrame {
 		txaEditor.setMargin( new Insets( 10, 10, 10, 10 ) );
 		txaEditor.setFont( monoFont );
 		txaEditor.setLineWrap( true );
-//		txaEditor.setEditable( false );
-		txaEditor.setText( WelcomeText.textoInicial() );
 		
-		scrollPaneEditor = new JScrollPane( txaEditor );
-		scrollPaneEditor.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPaneEditor.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		scrollPaneEditor.getVerticalScrollBar().setUnitIncrement(8);
+		scrEditor = new JScrollPane( txaEditor );
+		scrEditor.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrEditor.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrEditor.getVerticalScrollBar().setUnitIncrement(8);
 		
+		// SUBPAINEL DO CONSOLE
+		subpanelConsole = new JPanel();
+		BoxLayout panelConsoleLayout = new BoxLayout( subpanelConsole, BoxLayout.Y_AXIS);
+		subpanelConsole.setLayout( panelConsoleLayout );
 		
-		// PAINEL DO CONSOLE
-		panelConsole = new JPanel();
-		BoxLayout panelConsoleLayout = new BoxLayout( panelConsole, BoxLayout.Y_AXIS);
-		panelConsole.setLayout( panelConsoleLayout );
-		preventVerticalStretch( panelConsole );
-		
+		// COMPONENTES DO SUBPAINEL DO CONSOLE
 		txaConsole = new JTextArea(2,50);
 		txaConsole.setLineWrap( true );
 		txaConsole.setEditable( true );
@@ -208,18 +235,27 @@ public class MainGUI extends JFrame {
 		txaConsole.setCaretColor( Color.WHITE );
 		txaConsole.setMargin( new Insets( 10, 10, 10, 10 ) );
 		
-		scrollPaneConsole = new JScrollPane( txaConsole );
-		scrollPaneConsole.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPaneConsole.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		scrollPaneConsole.getVerticalScrollBar().setUnitIncrement(8);
+		scrConsole = new JScrollPane( txaConsole );
+		scrConsole.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrConsole.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrConsole.getVerticalScrollBar().setUnitIncrement(8);
+		preventVerticalStretch( scrConsole );
 		
-		panelConsole.setVisible( false );
-		
-		
-		// PAINEL DOS BOTOES
 		btConsole = new JButton("Mostrar Console");
 		btAnalisar = new JButton("Analisar Código");
-		btExecutar = new JButton("Executar Código");
+		btExecutar = new JButton("Executar Script");
+		
+		
+		// POSICIONAMENTO
+		panelEditor.add( scrEditor );		
+		panelEditor.add( espacamento( 1 ) );
+		panelEditor.add( subpanelConsole );
+		panelEditor.add( horizontalGroup( btConsole, btAnalisar, btExecutar ) );
+		panelEditor.add( espacamento( 1 ) );
+		
+		subpanelConsole.add( scrConsole );
+		subpanelConsole.add( espacamento( 1 ) );
+		subpanelConsole.setVisible( false );
 		
 		
 		// CAIXAS DE DIALOGO
@@ -236,20 +272,24 @@ public class MainGUI extends JFrame {
 	/**
 	 * Configura os eventos de input de usuário.
 	 */
-	private void eventosDeComponentes() {
+	private void registrarEventosDeComponentes() {
 		thisframe.addWindowListener( new WindowAdapter() { public void windowOpened( WindowEvent e ){
 			txaEditor.requestFocus();
 		}});
 
 		btConsole.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent e ) {
-			panelConsole.setVisible( !panelConsole.isVisible() );
-			btConsole.setText( panelConsole.isVisible() ? "Esconder Console" : "Mostrar Console" );
-			mainPanel.repaint();
-			mainPanel.revalidate();
+			subpanelConsole.setVisible( !subpanelConsole.isVisible() );
+			btConsole.setText( subpanelConsole.isVisible() ? "Esconder Console" : "Mostrar Console" );
+			thisframe.repaint();
+			thisframe.revalidate();
 		}});
 
 		btAnalisar.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent e ) {
 			// Analisar codigo
+		}});
+		
+		btEditor.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent e ) {
+			viewEditor();
 		}});
 	}
 	
@@ -275,9 +315,9 @@ public class MainGUI extends JFrame {
 		.item(  "Salvar como..." ).onClick( "saveAs" )
 		.item(  "Fechar" ).onClick( "close" )
 
-		.menu( "Código" )
-		.item( "Editar" )
-		.item( "Executar" )
+		.menu( "Exibir" )
+		.item( "Editor de código" ).onClick( "showEditor" )
+		.item( "Terminal de execução" ).onClick( "showRuntime" )
 		
 		.menu( "Janela" )
 		
@@ -301,7 +341,8 @@ public class MainGUI extends JFrame {
 			currentFile = null;
 			txaConsole.setText( null );
 			txaEditor.setText( null );
-			thisframe.setTitle( "Askbot - Sem Nome" );
+			thisframe.setTitle( "Askbot - Novo Script" );
+			viewEditor();
 		}})
 		.action( "open", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
 			int a = fileChooser.showOpenDialog( thisframe );
@@ -331,7 +372,13 @@ public class MainGUI extends JFrame {
 			currentFile = null;
 			txaConsole.setText( null );
 			txaEditor.setText( null );
-			thisframe.setTitle( "Askbot - Sem Nome" );
+			thisframe.setTitle( "Askbot - Novo Script" );
+		}})
+		.action( "showEditor", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
+			viewEditor();
+		}})
+		.action( "showRuntime", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
+			viewRuntime();
 		}})
 //		// ACOES DO MENU
 //		.action( "fill", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
@@ -346,6 +393,22 @@ public class MainGUI extends JFrame {
 		
 		return menubar;
 	}
+	
+	
+	private void viewEditor() {
+		thisframe.setContentPane( panelEditor );
+		txaEditor.requestFocus();
+		thisframe.revalidate();
+		thisframe.repaint();
+	}
+	
+	private void viewRuntime() {
+		thisframe.setContentPane( panelRuntime );
+		txaInput.requestFocus();
+		thisframe.revalidate();
+		thisframe.repaint();
+	}
+	
 	
 	
 	// =================================================================================================================
@@ -428,7 +491,7 @@ public class MainGUI extends JFrame {
 	
 	
 	
-	private void adicionar( Component ...cs ) {
+	private JPanel horizontalGroup( Component ...cs ) {
 		JPanel pH = new JPanel();
 		pH.setOpaque( false );
 		pH.setLayout( new GridBagLayout() );
@@ -443,7 +506,7 @@ public class MainGUI extends JFrame {
 		}
 //		if( cs.length > 1 )
 //			pH.add( new JLabel(), new GridBagConstraints(cs.length,0,1,1,1,1,GridBagConstraints.LINE_START,GridBagConstraints.BOTH,new Insets(0,0,0,0),1,1) );
-		mainPanel.add( pH );
+		return pH;
 	}
 
 }
