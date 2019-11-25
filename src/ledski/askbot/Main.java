@@ -6,15 +6,15 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import ledski.askbot.parser.SyntaxExceptions.NotAToken;
-import ledski.askbot.parser.SyntaxExceptions.UnfinishedCode;
-import ledski.askbot.parser.SyntaxExceptions.UnexpectedToken;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
 import ledski.askbot.parser.SyntaxTree;
 import ledski.askbot.lexer.Automato;
-import ledski.askbot.lexer.ConflictingTransitionException;
 import ledski.askbot.lexer.Token;
 import ledski.askbot.lexer.Token.TokenType;
 import ledski.util.Gridder;
+import ledski.askbot.runenv.MainGUI;
 
 /**
  * @author Leandro Oliveira Lino de Araujo
@@ -22,7 +22,18 @@ import ledski.util.Gridder;
 public class Main {
 	
 	
-	public static void main(String[] args) throws ConflictingTransitionException, NotAToken, UnexpectedToken, UnfinishedCode, Exception {
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater( new Runnable() {	
+			@Override
+			public void run() {
+				JFrame mainGUI = new MainGUI();
+				mainGUI.setVisible( true );
+			}
+		});
+	}
+	
+	
+	public static void compilarCodigo() throws Exception {
 		Automato a2 = new Automato();
 		a2.verboseLevel012 = 1;
 //		a2.mostrarCaminhosNoConsole();
@@ -51,7 +62,7 @@ public class Main {
 		
 		
 		// PARSER
-		SyntaxTree tree = new SyntaxTree( tokenList );
+		new SyntaxTree( tokenList );
 	}
 	
 	
