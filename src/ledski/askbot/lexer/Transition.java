@@ -32,7 +32,7 @@ public abstract class Transition {
 	
 	// Transicoes do estado incial até o estado marcado e o token relacionado
 	public static final Map<TokenType, String> pathMap = Stream.of(new Object[][] { 
-		{_Especialidade, "E s p e c i a l i d a d e [end]"},
+		{_Assunto,       "A s s u n t o [end]"},
 		{_Questao,       "Q u e s t a o [end]"},
 		{_Teste,         "T e s t e [end]"},
 		{_String,        "\" []* \" []"},

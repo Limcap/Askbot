@@ -1,9 +1,6 @@
 package ledski.askbot;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,13 +8,13 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import ledski.askbot.parser.SyntaxTree;
 import ledski.askbot.lexer.Automato;
 import ledski.askbot.lexer.ConflictingTransitionException;
 import ledski.askbot.lexer.Token;
 import ledski.askbot.lexer.Token.TokenType;
-import ledski.util.Gridder;
+import ledski.askbot.parser.SyntaxTree;
 import ledski.askbot.runenv.MainGUI;
+import ledski.util.Gridder;
 
 /**
  * @author Leandro Oliveira Lino de Araujo

@@ -22,7 +22,7 @@ public class Especialidade extends SyntaxRule {
 		
 		
 		try {
-			sm.getNextToken( _Especialidade );
+			sm.getNextToken( _Assunto );
 			sm.getNextToken( _doisPontos );			
 			name = sm.getNextToken( _String ).lexema;
 			description = sm.getNextToken( _String ).lexema;

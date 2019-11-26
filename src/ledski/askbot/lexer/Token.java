@@ -34,7 +34,7 @@ public class Token {
 	
 	
 	public enum TokenType {
-	_Especialidade, _Questao, _Teste, _String, _Numero,
+	_Assunto, _Questao, _Teste, _String, _Numero,
 	_Se, _Entao, _OuSe, _Senao,
 	_qVar, _tVar,
 	_whitespace,
