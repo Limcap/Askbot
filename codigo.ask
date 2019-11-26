@@ -1,6 +1,6 @@
 Especialidade:
 "Cores"
-"Um bate papo sobre cores"
+"Informações sobre cores"
 
 Questao qCor:
 "Qual é a sua cor preferida?"
@@ -9,6 +9,10 @@ Questao qCor:
 Questao qTom:
 "Qual o tom vc prefere? Números menores para mais tons escuros."
 [ 1 - 10 ]
+
+Questao q3:
+"Você prefere RGB ou HSB?"
+[ "RGB", "HSB" ]
 
 Teste t1:
 "Nossa cor favorita é a mesma?"

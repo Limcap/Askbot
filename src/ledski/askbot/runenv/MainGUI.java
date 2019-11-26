@@ -12,6 +12,8 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedWriter;
@@ -40,7 +42,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import ledski.askbot.Main;
 import ledski.askbot.lexer.ConflictingTransitionException;
 import ledski.askbot.lexer.Token;
-import ledski.askbot.parser.SyntaxTree;
+import ledski.askbot.runenv.util.Gridder;
 import ledski.util.EasyMenuBar;
 import ledski.util.EasyMenuBar.ItemAction;;
 
@@ -197,6 +199,7 @@ public class MainGUI extends JFrame {
 		panelRuntime.add( espacamento( 1 ) );
 		panelRuntime.add( horizontalGroup( btEditor, btReiniciar ) );
 		panelRuntime.add( espacamento( 1 ) );
+		
 	}
 	
 	
@@ -242,6 +245,7 @@ public class MainGUI extends JFrame {
 		txaConsole.setBackground( Color.LIGHT_GRAY );
 		txaConsole.setCaretColor( Color.WHITE );
 		txaConsole.setMargin( new Insets( 10, 10, 10, 10 ) );
+		txaConsole.setEditable( true );
 		
 		scrConsole = new JScrollPane( txaConsole );
 		scrConsole.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -295,16 +299,7 @@ public class MainGUI extends JFrame {
 		}});
 		
 		btVerTokens.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent e ) {
-			List<Token> tokenList;
-			try {
-				tokenList = Main.lexer( txaEditor.getText() );
-				txaRuntime.setText( "TOKENS ENCONTRADOS:\n\n" );
-				for( Token t : tokenList ) txaRuntime.append( t.toString() + "\n" );
-			} catch( ConflictingTransitionException | IOException e1 ) {
-				txaConsole.setText( e1.getMessage() );
-				e1.printStackTrace();
-			}
-			viewRuntime();
+			identificarTokens();
 		}});
 		
 		btExecutar.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent e ) {
@@ -314,6 +309,29 @@ public class MainGUI extends JFrame {
 		btEditor.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent e ) {
 			viewEditor();
 		}});
+		
+		btReiniciar.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent e ) {
+			interpreter.reset();
+			txaRuntime.setText( null );
+			executar();
+		}});
+		
+		txaInput.addKeyListener( new KeyListener() {
+			public void keyPressed( KeyEvent e ) {
+				if( e.getKeyChar() == '\n' ) {
+					String input = txaInput.getText();
+					String proximaMsg = interpreter.sendUserInput( input );
+					txaRuntime.append( proximaMsg );
+				}
+			}
+			public void keyReleased( KeyEvent e ) {
+
+			}
+			public void keyTyped( KeyEvent e ) {
+				txaInput.setText( null );
+			}
+		});
+			
 	}
 	
 	
@@ -457,12 +475,30 @@ public class MainGUI extends JFrame {
 		return msg == null ? true : false;
 	}
 	
+	private boolean identificarTokens() {
+		Gridder gr = new Gridder();
+		List<Token> tokenList;
+		try {
+			tokenList = Main.lexer( txaEditor.getText() );
+			for( int i = 0; i < tokenList.size(); i++ ) {
+				Token t = tokenList.get( i );
+				gr.textLine( i + ".", t.type.name(), "Lexema:", t.lexema );
+			}
+			txaRuntime.setText( "TOKENS ENCONTRADOS:\n\n" + gr.publish() );
+		} catch( ConflictingTransitionException | IOException e1 ) {
+			txaConsole.setText( e1.getMessage() );
+			e1.printStackTrace();
+		}
+		viewRuntime();
+		return true;
+	}
+	
 	private void executar() {
 		if( analisarCodigo() ) {
 			viewRuntime();
 			interpreter.reset();
 			txaRuntime.setText( null );
-			txaRuntime.append( interpreter.getNextBotLine() );
+			txaRuntime.append( interpreter.iniciarConversa() );
 		}
 	}
 	
