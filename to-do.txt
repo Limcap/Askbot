@@ -1,0 +1,24 @@
+TO-DO
+
+Lexer
+- Implementar o Numero decimal
+- Re-inserir tokens whitespace na lista de tokens e discriminar tokens line-feed para
+  possibilitar a indicação de linha e caractere em excecoes
++ Alterar token Especialidade para Assunto
+
+
+Parser
+
+Interpreter
+- Implementar a funcionalidade de teste do interpretador
+- Reorganizar o interpretador
+
+
+GUI
+- Melhorar a forma do input
+- Implementar a funcionalidade dos menus que faltam
+- Organizar a classe GUI
+
+Gridder
+- evitar whitespace depois do ultimo caractere da linha
+- evitar pular linhas
