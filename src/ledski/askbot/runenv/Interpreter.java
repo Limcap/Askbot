@@ -11,6 +11,15 @@ import ledski.askbot.parser.rules.Questao;
 import ledski.askbot.parser.rules.Teste;
 import ledski.util.Gridder;
 
+/**
+ * Essa classe é o interpretador da arvore sintática. Ela é o ambiente de execução do código. Ela funciona
+ * recebendo um input do usuario na forma String, processa esse input e retorna uma resposta ao usuário, e o ciclo
+ * se repete até que todas as questões e todos os testes tenham sido enviados ao usuário. O método que deve
+ * ser chamado para isso é o {@link #next(String)}. Os outros métodos públicos {@link #start()} e {@link #reset()},
+ * auxiliam na inicialização e reinicialização do interpretador.
+ * @author Leandro
+ * @version 0.1
+ */
 public class Interpreter {
 	private static SyntaxTree tree;
 	private static int currentQuestaoIndex = -1;
@@ -68,7 +77,7 @@ public class Interpreter {
 	 * E os estágios só devem mudar ao receber um input do usuário, e o input for váliido.
 	 * @return int no formato de uma constante
 	 */
-	public static int currentEstagio() {
+	private static int currentEstagio() {
 		if( currentQuestaoIndex < 0 ) return INICIO;
 		else if( currentQuestaoIndex < tree.questoes.size() ) return QUESTAO;
 		else return TESTE;
@@ -270,6 +279,8 @@ public class Interpreter {
 			if( isArrayRespostaRange(q) && input.contains( "." ) ) {
 				r.numDouble = Double.valueOf( input );
 				if( r.numDouble >= q.arrayDeResposta.range.min && r.numDouble <= q.arrayDeResposta.range.max ) {
+					r.string = input;
+					r.tipo = TokenType._Numero;
 					return r;
 				}
 			}
@@ -277,6 +288,8 @@ public class Interpreter {
 			else if( isArrayRespostaRange(q) ) {
 				r.numInteger = Integer.parseInt( input );
 				if( r.numInteger >= q.arrayDeResposta.range.min && r.numInteger <= q.arrayDeResposta.range.max ) {
+					r.string = input;
+					r.tipo = TokenType._Numero;
 					return r;
 				}
 			}
@@ -285,6 +298,7 @@ public class Interpreter {
 				int index = Integer.parseInt( input );
 				if( index > -1 && index < q.arrayDeResposta.items.size() ) {
 					r.string = q.arrayDeResposta.items.get( index ).valor;
+					r.tipo = TokenType._String;
 					return r;
 				}
 			}
@@ -297,14 +311,11 @@ public class Interpreter {
 	
 	
 	
-	private static boolean isArrayRespostaRange( Questao q ) {
-		return q.arrayDeResposta.items == null;
-	}
-	
-	
-	
-	
-	
+	/**
+	 * É o método que interpreta os Testes. Está funcionando mas é só a primeira versão. Precisa de ser dividido
+	 * em múltiplos métodos para melhorar o entendimento.
+	 * @return
+	 */
 	private static String estagioTeste() {
 		Teste t = tree.testes.get( 0 );
 		String resultado = null;
@@ -312,28 +323,42 @@ public class Interpreter {
 			boolean condicaoCompleta = false;
 			for( Condicao c : b.condicoes ) {
 				boolean condicaoUnica = false;
+				Resposta termo1;
+				Resposta termo2;
+				// se os termos forem cariaveis, recupera seus valores do mapa de variaveis
+				if( c.termo1.tipo == TokenType._qVar ) {
+					System.out.println( "=========  " + c.termo1.valor );
+					termo1 = mapaDeVariaveis.get( c.termo1.valor );
+				}
+				else termo1 = new Resposta(c.termo1.tipo, c.termo1.valor);
+				if( c.termo2.tipo == TokenType._qVar ) {
+					System.out.println( "=========  " + c.termo2.valor );
+					termo2 = mapaDeVariaveis.get( c.termo2.valor );
+				}
+				else termo2 = new Resposta(c.termo2.tipo, c.termo2.valor);
+				// Faz a comparacao dos termos
 				if((
-					c.termo1.tipo == TokenType._String &&
-					c.termo2.tipo == TokenType._String &&
+					termo1.tipo == TokenType._String &&
+					termo2.tipo == TokenType._String &&
 					c.opComparacao.tipo == TokenType._igualIgual
 				)||(
-					c.termo1.tipo == TokenType._Numero &&
-					c.termo2.tipo == TokenType._Numero
+					termo1.tipo == TokenType._Numero &&
+					termo2.tipo == TokenType._Numero
 				)) {
 					if( c.opComparacao.tipo == TokenType._igualIgual ) {
-						condicaoUnica = c.termo1.equals( c.termo2 );
+						condicaoUnica = termo1.string.equals( termo2.string );
 					}
 					else if( c.opComparacao.tipo == TokenType._diferente ) {
-						condicaoUnica = !c.termo1.equals( c.termo2 );
+						condicaoUnica = !termo1.string.equals( termo2.string );
 					}
 					else {
-						int termo1 = Integer.valueOf( c.termo1.valor );
-						int termo2 = Integer.valueOf( c.termo2.valor );
+						int num1 = Integer.valueOf( termo1.string );
+						int num2 = Integer.valueOf( termo2.string );
 						switch( c.opComparacao.tipo ) {
-							case _maior: condicaoUnica = termo1 > termo2; break;
-							case _maiorIgual: condicaoUnica = termo1 >= termo2; break;
-							case _menor: condicaoUnica = termo1 < termo2; break;
-							case _menorIgual: condicaoUnica = termo1 <= termo2; break;
+							case _maior: condicaoUnica = num1 > num2; break;
+							case _maiorIgual: condicaoUnica = num1 >= num2; break;
+							case _menor: condicaoUnica = num1 < num2; break;
+							case _menorIgual: condicaoUnica = num1 <= num2; break;
 						default:
 							break;
 						}
@@ -357,8 +382,33 @@ public class Interpreter {
 				break;
 			}
 		}
-		if( resultado == null ) resultado = t.resultadoPadrao.valor;
+		if( resultado == null ) resultado = replaceVariables( t.resultadoPadrao.valor );
 		return "\n\n" + removeQuotes( t.textoInicial ) + "\n" + removeQuotes( resultado );
+	}
+	
+	
+	
+	
+	
+	// =================================================================================================================
+	// METODOS E CLASSES AUXILIARES
+	//==================================================================================================================
+	
+	private static String replaceVariables( String s ) {
+		String newS = s;
+		for( String key : mapaDeVariaveis.keySet() ) {
+			String valorNovo = removeQuotes( mapaDeVariaveis.get( key ).string );
+			newS = newS.replace( key, valorNovo );
+		}
+		return newS;
+	}
+	
+	
+	
+	
+	
+	private static boolean isArrayRespostaRange( Questao q ) {
+		return q.arrayDeResposta.items == null;
 	}
 	
 	
@@ -390,10 +440,15 @@ public class Interpreter {
 	
 	
 	private static class Resposta {
+		public Resposta() {}
+		public Resposta( TokenType tipo, String valor ) {
+			this.string = valor;
+			this.tipo = tipo;
+		}
 		Integer numInteger;
 		Double numDouble;
 		String string;
-	
+		TokenType tipo;
 		Questao questao;
 	}
 }
