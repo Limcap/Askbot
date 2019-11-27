@@ -14,7 +14,7 @@ import ledski.askbot.parser.SyntaxManager;
 public class OpComparacao extends SyntaxRule {
 	
 	
-	public TokenType type;
+	public TokenType tipo;
 	
 	
 	public OpComparacao() throws Exception {
@@ -22,7 +22,7 @@ public class OpComparacao extends SyntaxRule {
 		
 		
 		if( sm.noSuccessYet() ) try {
-			type = sm.getNextToken( _igualIgual, _diferente, _maior, _maiorIgual, _menor, _menorIgual ).type;
+			tipo = sm.getNextToken( _igualIgual, _diferente, _maior, _maiorIgual, _menor, _menorIgual ).type;
 		}
 		catch ( UnexpectedToken e ) {
 			sm.resetRulePointer();

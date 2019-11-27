@@ -39,7 +39,7 @@ public class Node {
 	
 	/**
 	 * Caminha por todas as rotas do autômato e escreve cada rota do inicio ao fim em uma
-	 * linha do StringBuilder passado. É necessario utilizar System.out.print no StringBuilder
+	 * linha do StringBuilder passado como parâmetro. É necessario utilizar System.out.print no StringBuilder
 	 * após chamar este método para visualizar as rotas
 	 * @param listaDeRotas StringBuilder onde serão escritas as rotas
 	 */
@@ -151,7 +151,7 @@ public class Node {
 		if( Transition.chars.length == 0 ) return invertedLink;
 		Node destinationNode = directLinkMap.get( Transition.chars[0] );
 		// verifica se os chars da transicao ja existem no charNodeMap. No caso da transicao nao ser invertida, então
-		// se algum char ja existir, é necessario que todos os outros também já existam e indiquem o memso estado. Caso
+		// se algum char ja existir, é necessario que todos os outros também já existam e indiquem o mesmo estado. Caso
 		// contrário emite um erro pois a transicão analisada conflita com alguma transição já configurada antes.
 		// te e indicam o MESMO estado. Se nenhum char já
 		// existir entao todas as verificacões serao null o que indica que essa transicao ainda nao existe. Se só
@@ -192,10 +192,10 @@ public class Node {
 	
 	
 	/**
-	 * Verifica se a transição atual conflita com alguma outra já configurada. A consulta ao directLinkMap sobre os
-	 * chars da transição atual devem retornar sempre o mesmo estado ou sempre nulo para que a ela seja compatível.
+	 * Verifica se a transição atual conflita com alguma outra já configurada. A consulta dos chars da transição
+	 * atual no directLinkMap devem retornar sempre o mesmo estado ou sempre nulo para que a ela seja compatível.
 	 * <br>
-	 * <br>Exemplo: Se existem os chars 'a' e 'b' mas não 'c' no mapa de links diretos entao a transição [ac] é:
+	 * <br>Exemplo: Se existem os chars 'a' e 'b' mas não 'c' no mapa de links diretos, entao a transição [ac] é:
 	 * <ul>
 	 * <li>incompatível se o valor de 'a' não for null, pois visto  que 'c' não exite no mapa, sua consulta retorna
 	 *     null, enquanto que a consulta de 'a' não retorna null.
@@ -227,8 +227,9 @@ public class Node {
 	
 	/**
 	 * Conecta o estado ao proximo estado usando os caracteres da transição atual.
-	 * Chamado pela classe Automato ao construir o automato. Só é chamado se o teste para verificar se já existe
-	 * um estado para a transição atual retornar null, ou seja, não existir estado.
+	 * Chamado pela classe Automato ao construir o automato. Só deve ser chamado o a instância do Node
+	 * ainda não possuir os links da transição em questão, ou seja, ainda não houver estado de destino
+	 * para aquelas transições.
 	 * @return
 	 */
 	public Node createLinks() {

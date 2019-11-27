@@ -1,5 +1,10 @@
 package ledski.askbot.parser;
 
+/**
+ * É a interface que deve ser usada para criação das regras.
+ * @author Leandro Ledski
+ *
+ */
 public abstract class SyntaxRule {
 	
 //	public short endIndex = 0;

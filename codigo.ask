@@ -1,29 +1,34 @@
-Especialidade:
-"Cores"
-"Informações sobre cores"
+Assunto:
+   "Cores"
+   "Informações sobre cores"
 
 Questao qCor:
-"Qual é a sua cor preferida?"
-[ "Vermelho", "Verde", "Azul", "Amarelo", "Rosa", "Laranja", "Branco", "Preto" ]
+   "Qual é a sua cor preferida?"
+   [ "Vermelho", "Verde", "Azul", "Amarelo", "Rosa", "Laranja", "Branco", "Preto" ]
 
 Questao qTom:
-"Qual o tom vc prefere? Números menores para mais tons escuros."
-[ 1 - 10 ]
+   "Qual o tom vc prefere? Números menores para mais tons escuros."
+   [ 1 - 10 ]
 
 Questao q3:
-"Você prefere RGB ou HSB?"
-[ "RGB", "HSB" ]
-
-Teste t1:
-"Nossa cor favorita é a mesma?"
-Se qCor == "Verde" & qTom > 6
-Entao "Sim"
-OuSe qCor == "Verde" & qTom <=6
-Entao "Também gosto de verde, mas prefiro claro"
-Senao "Você gosta de qCor e eu gosto de Verde" 
+   "Você prefere RGB ou HSB?"
+   [ "RGB", "HSB" ]
 
 Teste t2:
-"Bla"
-Se 1 == 1
-Entao 1
-Senao 2
+   "O Resultado é"
+   Se 1 == 1
+   Entao 1
+   Senao 2
+
+Teste t1:
+   "Nossa cor favorita é a mesma?"
+   Se
+      qCor == "Verde" & qTom > 6
+   Entao
+      "Sim"
+   OuSe
+      qCor == "Verde" & qTom <=6
+   Entao
+      "Também gosto de verde, mas prefiro claro"
+   Senao
+      "Você gosta de qCor e eu gosto de Verde" 
