@@ -1,4 +1,4 @@
-package ledski.askbot.runenv.util;
+package ledski.util;
 
 import java.awt.Color;
 import java.awt.Font;

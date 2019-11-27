@@ -1,4 +1,4 @@
-package ledski.askbot.runenv.util;
+package ledski.util;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -127,6 +127,15 @@ public class EasyMenuBar extends JMenuBar{
 		JMenuItem item = new JMenuItem( "<html><p style='margin:4px'>" + itemNome + "</p></html>" );
 		lastItem = item;
 		stack.peek().add( item );
+		return this;
+	}
+	
+	
+	
+	
+	
+	public EasyMenuBar desabilitarItem() {
+		lastItem.setEnabled( false );
 		return this;
 	}
 	

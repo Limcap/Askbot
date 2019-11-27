@@ -1,0 +1,12 @@
+A versão geral é alpha 0.2
+--------------------------
+Versão dos componentes:
+
+Lexer - beta versão 0.2
+Parser - beta versão 0.2
+Interpreter - versão alpha 0.1
+GUI - versão alpha 0.1
+
+
+O Lexer e Parser estão numa versão beta estável e bem organizadas.
+O Interpretador e a GUI esão em versão alpha porém funcionando.

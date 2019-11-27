@@ -45,8 +45,8 @@ import javax.swing.text.Keymap;
 import ledski.askbot.Main;
 import ledski.askbot.lexer.ConflictingTransitionException;
 import ledski.askbot.lexer.Token;
-import ledski.askbot.runenv.util.Gridder;
 import ledski.util.EasyMenuBar;
+import ledski.util.Gridder;
 import ledski.util.EasyMenuBar.ItemAction;;
 
 @SuppressWarnings("serial")
@@ -174,7 +174,7 @@ public class MainGUI extends JFrame {
 		txaRuntime.setFont( monoFont );
 		txaRuntime.setLineWrap( true );
 		txaRuntime.setEditable( true );
-		txaRuntime.setText( WelcomeText.textoInicial() );
+		txaRuntime.setText( GUITexts.textoInicial() );
 		
 		scrRuntime = new JScrollPane( txaRuntime );
 		scrRuntime.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -366,17 +366,17 @@ public class MainGUI extends JFrame {
 			.item( "Terminal de execução" ).onClick( "showRuntime" )
 		.menu( "Janela" )
 			.submenu( "Tema do terminal" )
-				.item( "Claro" )
-				.item( "Escuro" )
+				.item( "Claro" ).desabilitarItem()
+				.item( "Escuro" ).desabilitarItem()
 				.parent()
 			.submenu( "Tema do editor" )
-				.item( "Claro" )
-				.item( "Escuro" )
+				.item( "Claro" ).desabilitarItem()
+				.item( "Escuro" ).desabilitarItem()
 				.parent()
 			.item( "Resetar tamanho" ).onClick( "pack" )
 		.menu( "Ajuda" )
-			.item( "Como usar" )
-			.item( "Sobre" )
+			.item( "Como usar" ).desabilitarItem()
+			.item( "Sobre" ).onClick( "about" )
 //		
 		.action( "new", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
 			arquivoNovo();
@@ -398,6 +398,12 @@ public class MainGUI extends JFrame {
 		}})
 		.action( "showRuntime", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
 			viewRuntimePanel();
+		}})
+		.action( "about", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
+			sobre();
+		}})
+		.action( "pack", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
+			thisframe.pack();
 		}})
 		;
 		
@@ -473,6 +479,12 @@ public class MainGUI extends JFrame {
 		txaInput.requestFocus();
 		thisframe.revalidate();
 		thisframe.repaint();
+	}
+	
+	
+	
+	private void sobre() {
+		txaRuntime.setText( GUITexts.ABOUT );
 	}
 	
 	
