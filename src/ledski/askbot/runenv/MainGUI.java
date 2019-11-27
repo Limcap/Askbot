@@ -12,8 +12,6 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedWriter;
@@ -26,6 +24,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -36,8 +36,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.JTextComponent;
+import javax.swing.text.Keymap;
 
 import ledski.askbot.Main;
 import ledski.askbot.lexer.ConflictingTransitionException;
@@ -75,8 +78,6 @@ public class MainGUI extends JFrame {
 	private JButton btVerTokens;
 	private JButton btExecutar;
 	
-	// INTERPRETADOR
-	private Interpreter interpreter = new Interpreter();
 	
 	
 	
@@ -88,6 +89,7 @@ public class MainGUI extends JFrame {
 		registrarFonte();
 		montarLayout();
 		registrarEventosDeComponentes();
+		viewRuntimePanel();
 	}
 	
 	
@@ -149,7 +151,6 @@ public class MainGUI extends JFrame {
 		setJMenuBar( barraDeMenu() );
 		buildPanelEditor();
 		buildPanelRuntime();
-		viewRuntime();
 	}
 	
 	
@@ -303,7 +304,7 @@ public class MainGUI extends JFrame {
 		}});
 		
 		btExecutar.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent e ) {
-			executar();
+			executarCodigo();
 		}});
 		
 		btEditor.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent e ) {
@@ -311,31 +312,36 @@ public class MainGUI extends JFrame {
 		}});
 		
 		btReiniciar.addActionListener( new ActionListener() { public void actionPerformed( ActionEvent e ) {
-			interpreter.reset();
 			txaRuntime.setText( null );
-			executar();
+			executarCodigo();
 		}});
 		
-		txaInput.addKeyListener( new KeyListener() {
-			public void keyPressed( KeyEvent e ) {
-				if( e.getKeyChar() == '\n' ) {
-					String input = txaInput.getText();
-					String proximaMsg = interpreter.sendUserInput( input );
-					txaRuntime.append( proximaMsg );
-				}
-			}
-			public void keyReleased( KeyEvent e ) {
-
-			}
-			public void keyTyped( KeyEvent e ) {
-				txaInput.setText( null );
-			}
-		});
+		Keymap userInputCLIkeymap =  JTextComponent.addKeymap( null, txaInput.getKeymap() );
+		Action CLIpressEnter = new AbstractAction() { public void actionPerformed( ActionEvent e ) {
+			String proximaMsg = Interpreter.next( txaInput.getText() );
+			txaInput.setText( null );
+			txaRuntime.append( proximaMsg );
+		}};
+		userInputCLIkeymap.addActionForKeyStroke( KeyStroke.getKeyStroke("ENTER"), CLIpressEnter );
+		txaInput.setKeymap( userInputCLIkeymap );
+		
+//		txaInput.addKeyListener( new KeyListener() {
+//			public void keyPressed( KeyEvent e ) {
+//				if( e.getKeyChar() == '\n' ) {
+//					String input = txaInput.getText();
+//					String proximaMsg = interpreter.sendUserInput( input );
+//					txaRuntime.append( proximaMsg );
+//				}
+//			}
+//			public void keyReleased( KeyEvent e ) {
+//
+//			}
+//			public void keyTyped( KeyEvent e ) {
+//				txaInput.setText( null );
+//			}
+//		});
 			
 	}
-	
-	
-	
 	
 	
 	
@@ -350,59 +356,33 @@ public class MainGUI extends JFrame {
 		
 		// ITENS DO MENU
 		.menu( "Arquivo" )
-		.item( "Criar um novo Askbot" ).onClick( "new" )
-		.item( "Abrir..." ).onClick( "open" )
-		.item( "Salvar" ).onClick( "save" )
-		.item(  "Salvar como..." ).onClick( "saveAs" )
-		.item(  "Fechar" ).onClick( "close" )
-
+			.item( "Criar um novo Askbot" ).onClick( "new" )
+			.item( "Abrir..." ).onClick( "open" )
+			.item( "Salvar" ).onClick( "save" )
+			.item(  "Salvar como..." ).onClick( "saveAs" )
+			.item(  "Fechar" ).onClick( "close" )
 		.menu( "Exibir" )
-		.item( "Editor de código" ).onClick( "showEditor" )
-		.item( "Terminal de execução" ).onClick( "showRuntime" )
-		
+			.item( "Editor de código" ).onClick( "showEditor" )
+			.item( "Terminal de execução" ).onClick( "showRuntime" )
 		.menu( "Janela" )
-		
-		.submenu( "Tema do terminal" )
-		.item( "Claro" )
-		.item( "Escuro" )
-		
-		.parent()
-		.submenu( "Tema do editor" )
-		.item( "Claro" )
-		.item( "Escuro" )
-		
-		.parent()
-		.item( "Resetar tamanho" ).onClick( "pack" )
-		
+			.submenu( "Tema do terminal" )
+				.item( "Claro" )
+				.item( "Escuro" )
+				.parent()
+			.submenu( "Tema do editor" )
+				.item( "Claro" )
+				.item( "Escuro" )
+				.parent()
+			.item( "Resetar tamanho" ).onClick( "pack" )
 		.menu( "Ajuda" )
-		.item( "Como usar" )
-		.item( "Sobre" )
+			.item( "Como usar" )
+			.item( "Sobre" )
 //		
 		.action( "new", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
-			currentFile = null;
-			txaConsole.setText( null );
-			txaEditor.setText( null );
-			thisframe.setTitle( "Askbot - Novo Script" );
-			viewEditor();
+			arquivoNovo();
 		}})
 		.action( "open", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
-			int a = fileChooser.showOpenDialog( thisframe );
-			if( a == JFileChooser.APPROVE_OPTION ) {
-				currentFile = fileChooser.getSelectedFile();
-				List<String> fileContents;
-				txaEditor.setText( null );
-				try {
-					fileContents = Files.readAllLines( Paths.get( currentFile.toURI() ), StandardCharsets.UTF_8 );
-					fileContents.forEach( line -> txaEditor.append( line + "\n" ) );
-					txaEditor.setCaretPosition( 0 );
-					thisframe.setTitle( "Askbot - " + currentFile.getName() );
-					viewEditor();
-				} catch( IOException e1 ) {
-					txaEditor.append( "Não foi possível ler o aquivo selecionado. Verifique se é um arquivo de texto." );
-					e1.printStackTrace();
-				}
-				
-			}
+			arquivoAbrir();
 		}})
 		.action( "save", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
 			arquivoSalvar();
@@ -411,69 +391,26 @@ public class MainGUI extends JFrame {
 			arquivoSalvarComo();
 		}})
 		.action( "close", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
-			currentFile = null;
-			txaConsole.setText( null );
-			txaEditor.setText( null );
-			thisframe.setTitle( "Askbot - Novo Script" );
+			arquivoFechar();
 		}})
 		.action( "showEditor", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
 			viewEditor();
 		}})
 		.action( "showRuntime", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
-			viewRuntime();
+			viewRuntimePanel();
 		}})
-//		// ACOES DO MENU
-//		.action( "fill", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
-//			if( args.length > 0 && args[0] != null ) txaOut.setText( (String) args[0] );
-//			if( args.length > 1 && args[1] != null ) txaRestricoes.setText( (String) args[1] );
-//			if( args.length > 2 && args[2] != null ) txaSolution.setText( (String) args[2] );
-//		}})
-//		.action( "pack", new ItemAction() { public void onClick( ActionEvent e, Object[] args ) {
-//			thisFrame.pack();
-//		}})
 		;
 		
 		return menubar;
 	}
 	
 	
-	private void viewEditor() {
-		thisframe.setContentPane( panelEditor );
-		txaEditor.requestFocus();
-		thisframe.revalidate();
-		thisframe.repaint();
-	}
 	
-	private void viewRuntime() {
-		thisframe.setContentPane( panelRuntime );
-		txaInput.requestFocus();
-		thisframe.revalidate();
-		thisframe.repaint();
-	}
+	// =================================================================================================================
+	// METODOS QUE CHAMAM O COMPILADOR E O INTERPRETADOR
+	//==================================================================================================================
 	
-	private void showOnConsole( String msg, Color color ) {
-		if( color == null ) color = Color.BLACK;
-		txaConsole.setText( msg );
-		txaConsole.setForeground( color );
-		toggleConsole( true );
-	}
 	
-	private void toggleConsole( Boolean visible) {
-		if( visible == null )
-			subpanelConsole.setVisible( !subpanelConsole.isVisible() );
-		else
-			subpanelConsole.setVisible( visible );
-		btConsole.setText( subpanelConsole.isVisible() ? "Esconder Console" : "Mostrar Console" );
-		thisframe.repaint();
-		thisframe.revalidate();
-	}
-	
-	private boolean analisarCodigo() {
-		String msg = Main.compilar( txaEditor.getText() );
-		if( msg == null ) showOnConsole( "Beautiful!", new Color(0,140,30) );
-		else showOnConsole( msg, Color.RED );
-		return msg == null ? true : false;
-	}
 	
 	private boolean identificarTokens() {
 		Gridder gr = new Gridder();
@@ -489,24 +426,112 @@ public class MainGUI extends JFrame {
 			txaConsole.setText( e1.getMessage() );
 			e1.printStackTrace();
 		}
-		viewRuntime();
+		viewRuntimePanel();
 		return true;
 	}
 	
-	private void executar() {
+	
+	
+	private boolean analisarCodigo() {
+		String msg = Main.compilar( txaEditor.getText() );
+		if( msg == null ) showOnConsole( "Beautiful!", new Color(0,140,30) );
+		else showOnConsole( msg, Color.RED );
+		return msg == null ? true : false;
+	}
+	
+	
+	
+	private void executarCodigo() {
 		if( analisarCodigo() ) {
-			viewRuntime();
-			interpreter.reset();
+			viewRuntimePanel();
+			Interpreter.reset();
+			Interpreter.setSyntaxTree( Main.tree );
 			txaRuntime.setText( null );
-			txaRuntime.append( interpreter.iniciarConversa() );
+			txaRuntime.append( Interpreter.start() );
 		}
 	}
 	
 	
 	
 	// =================================================================================================================
-	// MÉTODOS DE ABRIR E SALVAR ARQUIVO
+	// ACOES GERAIS DE MANIPULACAO DA GUI
 	//==================================================================================================================
+	
+	
+	
+	private void viewEditor() {
+		thisframe.setContentPane( panelEditor );
+		txaEditor.requestFocus();
+		thisframe.revalidate();
+		thisframe.repaint();
+	}
+	
+	
+	
+	private void viewRuntimePanel() {
+		thisframe.setContentPane( panelRuntime );
+		txaInput.requestFocus();
+		thisframe.revalidate();
+		thisframe.repaint();
+	}
+	
+	
+	
+	private void showOnConsole( String msg, Color color ) {
+		if( color == null ) color = Color.BLACK;
+		txaConsole.setText( msg );
+		txaConsole.setForeground( color );
+		toggleConsole( true );
+	}
+	
+	
+	
+	private void toggleConsole( Boolean visible) {
+		if( visible == null )
+			subpanelConsole.setVisible( !subpanelConsole.isVisible() );
+		else
+			subpanelConsole.setVisible( visible );
+		btConsole.setText( subpanelConsole.isVisible() ? "Esconder Console" : "Mostrar Console" );
+		thisframe.repaint();
+		thisframe.revalidate();
+	}
+	
+	
+	
+	// =================================================================================================================
+	// ACOES DO MENU ARQUIVO
+	//==================================================================================================================
+	
+	
+	
+	private void arquivoNovo() {
+		currentFile = null;
+		txaConsole.setText( null );
+		txaEditor.setText( null );
+		thisframe.setTitle( "Askbot - Novo Script" );
+		viewEditor();
+	}
+	
+	
+	
+	private void arquivoAbrir() {
+		int a = fileChooser.showOpenDialog( thisframe );
+		if( a == JFileChooser.APPROVE_OPTION ) {
+			currentFile = fileChooser.getSelectedFile();
+			List<String> fileContents;
+			txaEditor.setText( null );
+			try {
+				fileContents = Files.readAllLines( Paths.get( currentFile.toURI() ), StandardCharsets.UTF_8 );
+				fileContents.forEach( line -> txaEditor.append( line + "\n" ) );
+				txaEditor.setCaretPosition( 0 );
+				thisframe.setTitle( "Askbot - " + currentFile.getName() );
+				viewEditor();
+			} catch( IOException e1 ) {
+				txaEditor.append( "Não foi possível ler o aquivo selecionado. Verifique se é um arquivo de texto." );
+				e1.printStackTrace();
+			}
+		}
+	}
 	
 	
 	
@@ -547,6 +572,15 @@ public class MainGUI extends JFrame {
 				thisframe.setTitle( "Askbot - " + f.getName() );
 			}
 		}
+	}
+	
+	
+	
+	private void arquivoFechar() {
+		currentFile = null;
+		txaConsole.setText( null );
+		txaEditor.setText( null );
+		thisframe.setTitle( "Askbot - Novo Script" );
 	}
 	
 	
